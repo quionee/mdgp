@@ -1,24 +1,12 @@
 # -*- coding: utf-8 -*-
 
 class Grupo:
-    idGrupo = 0
-    
-    def __init__(self, grafo):
-        self.limiteInferior = grafo.limites[idGrupo][0]
-        self.limiteSuperior = grafo.limites[idGrupo][1]
-        self.
-        idGrupo += 1
+    def __init__(self, limiteInferior, limiteSuperior, elemento):
+        self.limiteInferior = limiteInferior
+        self.limiteSuperior = limiteSuperior
+        self.qtdElementos = 1
+        self.elementos = []
+        self.elementos.append(elemento)
+        self.arestas = []
+        self.somatorioDistancias = 0
 
-    
-    def divisaoInicial(self):
-        elementosAleatorios = []
-        aux = 0;
-        while (aux < qtdGrupos):
-            elemento = randint(0, (qtdElementos - 1))
-
-            if not(inseridos[elemento]):
-                elementosAleatorios.append(elemento)
-                inseridos[elemento] = True
-                aux += 1
-        
-        print(elementosAleatorios)
