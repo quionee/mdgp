@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from grupo import Grupo
+#~ from grupo import Grupo
 from random import randint
 
 class Grafo:

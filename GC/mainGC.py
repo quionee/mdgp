@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from grafo import Grafo
-from grupo import Grupo
+from grafoGC import Grafo
+from grupoGC import Grupo
 from random import randint
 
 def leArquivo(nomeArquivo):
@@ -137,9 +137,6 @@ def limiteInferior(grafo, grupos, matriz):
         #~ print('qtdGrupos: ', grafo.qtdGrupos)
         
         if (qtdGruposProntos == grafo.qtdGrupos):
-            #~ print ''
-            #~ print 'COMO ASSIM TA TUDO PRONTO'
-            #~ print ''
             terminou = True
             
         #~ print('gruposCompletos: ', gruposCompletos)
@@ -235,7 +232,7 @@ def main():
     grafo = leArquivo(nomeArquivo)
     matrizGrafo = grafo.matrizAdjacenciaGrafo()
     
-    #~ grafo.imprimeMatriz(matrizGrafo)
+    grafo.imprimeMatriz(matrizGrafo)
 
     elementosAleatorios = divisaoInicial(grafo)
     
@@ -245,17 +242,20 @@ def main():
         
     if (len(grafo.elementosSemGrupo) > 0):
         limiteSuperior(grafo, grupos, matrizGrafo)
-
-    #~ for i in range(grafo.qtdGrupos):
-        #~ print '\nGRUPO ', i
-        #~ print 'limiteInferior: ', grupos[i].limiteInferior
-        #~ print 'limiteSuperior: ', grupos[i].limiteSuperior
-        #~ print 'qtdElementos: ', grupos[i].qtdElementos
-        #~ print 'elementos: ', grupos[i].elementos
-        #~ print 'arestas: ', grupos[i].arestas
-        #~ print 'somatorioDistancias: ', grupos[i].somatorioDistancias
     
-    print '\ngrafo.elementosSemGrupo: ', grafo.elementosSemGrupo
+    somatorioTotal = 0
+    print 'GC Method'
+    for i in range(grafo.qtdGrupos):
+        print '\nGRUPO ', (i + 1)
+        print 'limiteInferior: ', grupos[i].limiteInferior
+        print 'limiteSuperior: ', grupos[i].limiteSuperior
+        print 'qtdElementos: ', grupos[i].qtdElementos
+        print 'elementos: ', grupos[i].elementos
+        print 'arestas: ', grupos[i].arestas
+        print 'somatorioDistancias: ', grupos[i].somatorioDistancias
+        somatorioTotal += grupos[i].somatorioDistancias
+    
+    print '\nSomatorio total das distancias: ', somatorioTotal
 
 if __name__ == "__main__":
     main()
