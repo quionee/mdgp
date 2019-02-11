@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "metodoLH.hpp"
+#include "buscaLocal.hpp"
 
 using namespace std;
 
@@ -119,23 +120,15 @@ std::vector<Grupo> MetodoLH::gerarSolucao(Grafo* grafo) {
                 }
             }
         }
-
-        //~ cout << "\n\nmatrizGama:\n";
-        //~ for (int i = 0; i < grafo->getQtdElementos(); ++i) {
-            //~ for (int j = 0; j < grafo->getQtdGrupos(); ++j) {
-                //~ cout << matrizGama[i][j] << " ";
-            //~ }
-            //~ cout << endl;
-        //~ }
         
         double f = 0;
         bool melhorou = true;
+        BuscaLocal buscaLocal;
         while (melhorou) {
-            //~ cout << "\n\nTENTATIVA DE MELHORA\n\n";
             melhorou = false;
-            buscaLocalInsercao(solucoes[l], vetorY, vetorZ, matrizGama, melhorou, f, matriz);
+            buscaLocal.insercao(solucoes[l], vetorY, vetorZ, matrizGama, melhorou, f, matriz);
             
-            buscaLocalSwap(vetorY, matrizGama, melhorou, f, matriz);
+            buscaLocal.swap(vetorY, matrizGama, melhorou, f, matriz);
         }
         
         // zera variaveis dos grupos (exceto os limites)
@@ -160,29 +153,6 @@ std::vector<Grupo> MetodoLH::gerarSolucao(Grafo* grafo) {
             }
         }
         
-        //~ cout << "\n\nAPOS MODIFICAOES";
-        //~ cout << "\n\nvetorY: ";
-        //~ for (unsigned int i = 0; i < vetorY.size(); ++i) {
-            //~ cout << vetorY[i] << " ";
-        //~ }
-        //~ cout << endl;
-        
-        //~ cout << "\n\nvetorZ: ";
-        //~ for (unsigned int i = 0; i < vetorZ.size(); ++i) {
-            //~ cout << vetorZ[i] << " ";
-        //~ }
-        //~ cout << endl;
-        
-        //~ cout << "\n\nmatrizGama:\n";
-        //~ for (int i = 0; i < grafo->getQtdElementos(); ++i) {
-            //~ for (int j = 0; j < grafo->getQtdGrupos(); ++j) {
-                //~ cout << matrizGama[i][j] << " ";
-            //~ }
-            //~ cout << endl;
-        //~ }
-        
-        
-        
         vetorY.clear();
         vetorZ.clear();
     }
@@ -194,6 +164,7 @@ std::vector<Grupo> MetodoLH::gerarSolucao(Grafo* grafo) {
         for (unsigned int j = 0; j < solucoes[i].size(); ++j) {
             somatorio += solucoes[i][j].getSomatorioDistancias();
         }
+        //~ cout << "\nsomatorio: " << somatorio << endl;
         if (somatorio > maiorSomatorio) {
             maiorSomatorio = somatorio;
             melhorSolucaoInicial = i;
@@ -260,65 +231,6 @@ void MetodoLH::atualizaGrafo(Grafo* grafo, int elemento, std::vector<int> &eleme
     grafo->setElementosSemGrupoRemove(elementosSemGrupo, elemento);
 }
 
-void MetodoLH::buscaLocalInsercao(std::vector<Grupo> grupos, std::vector<int> &vetorY, std::vector<int> &vetorZ, std::vector<std::vector<double> > &matrizGama, bool &melhorou, double &f, double** matriz) {
-    for (int v = 0; v < int(vetorY.size()); ++v) {
-        for (int g = 0; g < int(vetorZ.size()); ++g) {
-            if ((vetorY[v] != g) and (vetorZ[vetorY[v]] > grupos[vetorY[v]].getLimiteInferior()) and (vetorZ[g] < grupos[g].getLimiteSuperior())) {
-                double deltaF = matrizGama[v][g] - matrizGama[v][vetorY[v]];
-                if (deltaF > 0) {
-                    //~ cout << "MELHORANDO...\n";
-                    atualizaMatrizGamaInsercao(matrizGama, vetorY[v], g, v, matriz);
-                    
-                    vetorZ[vetorY[v]] = vetorZ[vetorY[v]] - 1;
-                    vetorZ[g] = vetorZ[g] + 1;
-                    vetorY[v] = g;
-                    f = f + deltaF;
-                    
-                    melhorou = true;
-                }
-            }
-        }
-    }
-}
-
-void MetodoLH::atualizaMatrizGamaInsercao(std::vector<std::vector<double> > &matrizGama, unsigned int grupoI, unsigned int grupoJ, int elementoV, double** matriz) {
-    //~ cout << endl;
-    for (int u = 0; u < int(matrizGama.size()); ++u) {
-        if (u != elementoV) {
-            //~ cout << "\nMELHOROU\n";
-            matrizGama[u][grupoI] = matrizGama[u][grupoI] - matriz[elementoV][u];
-            matrizGama[u][grupoJ] = matrizGama[u][grupoJ] + matriz[elementoV][u];
-        }
-    }
+//~ void MetodoLH::pertubacaoFraca() {
     
-}
-
-void MetodoLH::buscaLocalSwap(std::vector<int> &vetorY, std::vector<std::vector<double> > &matrizGama, bool &melhorou, double &f, double** matriz) {
-    for (int v = 0; v < (int(vetorY.size())); ++v) {
-        for (int u = v + 1; u < int(vetorY.size()); ++u) {
-            if (vetorY[v] != vetorY[u]) {
-                double deltaF = (matrizGama[v][vetorY[u]] - matrizGama[v][vetorY[v]]) + (matrizGama[u][vetorY[v]] - matrizGama[u][vetorY[u]]) - (2 * matriz[v][u]);
-                if (deltaF > 0) {
-                    atualizaMatrizGamaSwap(matrizGama, vetorY[v], vetorY[u], v, u, matriz);
-                    
-                    swap(vetorY, v, u);
-                    f = f + deltaF;
-                    
-                    melhorou = true;
-                }
-            }
-        }
-    }
-}
-
-void MetodoLH::atualizaMatrizGamaSwap(std::vector<std::vector<double> > &matrizGama, unsigned int grupoI, unsigned int grupoJ, int elementoV, int elementoU, double** matriz) {
-    atualizaMatrizGamaInsercao(matrizGama, grupoI, grupoJ, elementoV, matriz);
-    atualizaMatrizGamaInsercao(matrizGama, grupoJ, grupoI, elementoU, matriz);
-}
-
-void MetodoLH::swap(std::vector<int> &vetorY, int elementoV, int elementoU) {
-    int aux = vetorY[elementoV];
-    vetorY[elementoV] = vetorY[elementoU];
-    vetorY[elementoU] = aux;
-}
-
+//~ }

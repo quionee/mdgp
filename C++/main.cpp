@@ -8,24 +8,26 @@
 #include "solucaoInicial.hpp"
 #include "metodoLH.hpp"
 #include "metodoGC.hpp"
+#include "metodoWJ.hpp"
+#include "buscaLocal.hpp"
 
 using namespace std;
 
 int main() {
     
     string nomeArquivo;
-    int qtdSolucoesFactiveis;
-    cin >> nomeArquivo >> qtdSolucoesFactiveis;
+    //~ int qtdSolucoesFactiveis;
+    cin >> nomeArquivo;
     
-    cout << "\n\nMetodo LH: \n\n";
-    MetodoLH* solucaoInicialLH = new MetodoLH(qtdSolucoesFactiveis);
+    //~ cout << "\n\nMetodo LH: \n\n";
+    //~ MetodoLH* solucaoInicialLH = new MetodoLH(qtdSolucoesFactiveis);
     
-    Grafo* grafoLH = solucaoInicialLH->leArquivo(nomeArquivo);
+    //~ Grafo* grafoLH = solucaoInicialLH->leArquivo(nomeArquivo);
     
-    vector<Grupo> gruposLH = solucaoInicialLH->gerarSolucao(grafoLH);
+    //~ vector<Grupo> gruposLH = solucaoInicialLH->gerarSolucao(grafoLH);
     
-    double somatorioTotal = 0;
-    for (unsigned int i = 0; i  < gruposLH.size(); ++i) {
+    //~ double somatorioTotal = 0;
+    //~ for (unsigned int i = 0; i  < gruposLH.size(); ++i) {
         //~ cout << "\n\nGRUPO " << (i + 1)
              //~ << "\nlimiteInferior: " << gruposLH[i].getLimiteInferior()
              //~ << "\nlimiteSuperior: " << gruposLH[i].getLimiteSuperior()
@@ -45,21 +47,21 @@ int main() {
                  //~ << arestasValor[j] << "; ";
         //~ }
         //~ cout << "\nsomatorioDistancias: " << gruposLH[i].getSomatorioDistancias();
-        somatorioTotal += gruposLH[i].getSomatorioDistancias();
-    }
-    cout << "\nsomatorioTotal: " << somatorioTotal;
-    cout << endl << endl;
+        //~ somatorioTotal += gruposLH[i].getSomatorioDistancias();
+    //~ }
+    //~ cout << "\nsomatorioTotal: " << somatorioTotal;
+    //~ cout << endl << endl;
         
-    cout << "\n\nMetodo GC: \n\n";
+    //~ cout << "\n\nMetodo GC: \n\n";
     
-    MetodoGC* solucaoInicialGC = new MetodoGC();
+    //~ MetodoGC* solucaoInicialGC = new MetodoGC();
 
-    Grafo* grafoGC = solucaoInicialGC->leArquivo(nomeArquivo);
+    //~ Grafo* grafoGC = solucaoInicialGC->leArquivo(nomeArquivo);
 
-    vector<Grupo> gruposGC = solucaoInicialGC->gerarSolucao(grafoGC);
+    //~ vector<Grupo> gruposGC = solucaoInicialGC->gerarSolucao(grafoGC);
     
-    somatorioTotal = 0;
-    for (unsigned int i = 0; i  < gruposGC.size(); ++i) {
+    //~ somatorioTotal = 0;
+    //~ for (unsigned int i = 0; i  < gruposGC.size(); ++i) {
         //~ cout << "\n\nGRUPO " << (i + 1)
              //~ << "\nlimiteInferior: " << gruposGC[i].getLimiteInferior()
              //~ << "\nlimiteSuperior: " << gruposGC[i].getLimiteSuperior()
@@ -79,10 +81,15 @@ int main() {
                  //~ << arestasValor[j] << "; ";
         //~ }
         //~ cout << "\nsomatorioDistancias: " << gruposGC[i].getSomatorioDistancias();
-        somatorioTotal += gruposGC[i].getSomatorioDistancias();
-    }
-    cout << "\nsomatorioTotal: " << somatorioTotal;
-    cout << endl << endl;
+        //~ somatorioTotal += gruposGC[i].getSomatorioDistancias();
+    //~ }
+    //~ cout << "\nsomatorioTotal: " << somatorioTotal;
+    //~ cout << endl << endl;
     
+    cout << "\n\nMetodo WJ: \n\n";
+    
+    MetodoWJ* solucaoInicialWJ = new MetodoWJ();
+    Grafo* grafoWJ = solucaoInicialWJ->leArquivo(nomeArquivo);
+    vector<Grupo> gruposWJ = solucaoInicialWJ->gerarSolucao(grafoWJ);
     
 }
