@@ -34,10 +34,13 @@ class BuscaLocal {
         std::vector<Grupo> buscaLocal(Grafo* grafo, std::vector<Grupo> solucao);
 
         std::vector<Grupo> insercao(Grafo* grafo, std::vector<Grupo> solucao);
+        void insercaoAlgoritmo(std::vector<Grupo> grupos, bool &melhorou);
 
-        void insercaoPrincipal(std::vector<Grupo> grupos, bool &melhorou);
-        void swapPrincipal(bool &melhorou);
-        void swapEmCadeia(bool &melhorou);
+        std::vector<Grupo> swap(Grafo* grafo, std::vector<Grupo> solucao);
+        void swapAlgoritmo(bool &melhorou);
+
+        std::vector<Grupo> swapEmCadeia(Grafo* grafo, std::vector<Grupo> solucao);
+        void swapEmCadeiaAlgoritmo(bool &melhorou);
 
         void atualizaSolucao(Grafo* grafo, std::vector<Grupo> &grupos);
 };

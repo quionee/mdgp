@@ -45,6 +45,38 @@ void realizaSomatorioDaSolucao(double &somatorioTotal, vector<Grupo> grupos) {
     }
 }
 
+vector<Grupo> buscaMaxima(Grafo* grafo, vector<Grupo> s0, int alfa) {
+    int qtdIteracoes;
+    cout << "\nForca da perturbacao fraca: ";
+    cin >> qtdIteracoes;;
+
+    vector<Grupo> s = s0;
+    BuscaLocal buscaLocal(grafo);
+
+    vector<Grupo> sb = buscaLocal.buscaLocal(grafo, s);
+    int contador = 0;
+    Perturbacao perturbacao;
+    while (contador < alfa) {
+        s = perturbacao.perturbacaoFraca(grafo, sb, qtdIteracoes, buscaLocal);
+        s = buscaLocal.buscaLocal(grafo, s);
+
+        double somatorioS = 0, somatorioSb = 0;
+        for (int i = 0; i < grafo->getQtdGrupos(); ++i) {
+            somatorioS += s[i].getSomatorioDistancias();
+            somatorioSb += sb[i].getSomatorioDistancias();
+        }
+
+        if (somatorioS > somatorioSb) {
+            sb = s;
+            contador = 0;
+        }
+        else {
+            ++contador;
+        }
+    }
+    return sb;
+}
+
 void solucaoInicialLH(string nomeArquivo) {
     cout << "\n\n---------- Metodo LH: ----------\n\n";
     
@@ -60,20 +92,30 @@ void solucaoInicialLH(string nomeArquivo) {
     double somatorioTotal = 0;
     realizaSomatorioDaSolucao(somatorioTotal, grupos);
     cout << "\nSolucao inicial: " << somatorioTotal << endl;
-    
-    // Comeca perturbacao
-    Perturbacao perturbacao;
-    int qtdIteracoes;
-    
-    cout << "\nForca da perturbacao fraca: ";
-    cin >> qtdIteracoes;
-    BuscaLocal buscaLocal(grafo);
-    grupos = perturbacao.perturbacaoFraca(grafo, grupos, qtdIteracoes, buscaLocal);
+
+    int alfa;
+    cout << "\nalfa: ";
+    cin >> alfa;
+    grupos = buscaMaxima(grafo, grupos, alfa);
+
     somatorioTotal = 0;
     realizaSomatorioDaSolucao(somatorioTotal, grupos);
-    cout << "\nSomatorio apos perturbacao fraca: " << somatorioTotal;
-    
+    cout << "\nSomatorio apos busca maxima: " << somatorioTotal;
     cout << "\n\n";
+
+    // Comeca perturbacao
+    // Perturbacao perturbacao;
+    // int qtdIteracoes;
+    
+    // cout << "\nForca da perturbacao fraca: ";
+    // cin >> qtdIteracoes;
+    // BuscaLocal buscaLocal(grafo);
+    // grupos = perturbacao.perturbacaoFraca(grafo, grupos, qtdIteracoes, buscaLocal);
+    // somatorioTotal = 0;
+    // realizaSomatorioDaSolucao(somatorioTotal, grupos);
+    // cout << "\nSomatorio apos perturbacao fraca: " << somatorioTotal;
+    
+    // cout << "\n\n";
     
     // cout << "\n\nForca da perturbacao forte: ";
     // cin >> qtdIteracoes;
@@ -90,22 +132,6 @@ void solucaoInicialLH(string nomeArquivo) {
     // cout << "\nSomatorio apos perturbacao fraca: " << somatorioTotal << "\n\n";
 }
 
-void buscaMaxima(Grafo* grafo, vector<Grupo> s0, int alfa) {
-    int qtdIteracoes;
-    cout << "\nqtdIteracoes: ";
-    cin >> qtdIteracoes;
-
-    vector<Grupo> s = s0;
-    BuscaLocal buscaLocal(grafo);
-    vector<Grupo> sb = buscaLocal.buscaLocal(grafo, s);
-    int contador = 0;
-    Perturbacao perturbacao;
-    while (contador < alfa) {
-        s = perturbacao.perturbacaoFraca(grafo, sb, qtdIteracoes, buscaLocal);
-
-    }
-}
-
 void solucaoInicialGC(string nomeArquivo) {
     cout << "\n\n---------- Metodo GC: ----------\n\n";
 
@@ -119,24 +145,29 @@ void solucaoInicialGC(string nomeArquivo) {
     realizaSomatorioDaSolucao(somatorioTotal, grupos);
     cout << "\nSolucao inicial: " << somatorioTotal << endl;
     
-    // int alfa;
-    // cout << "\nalfa: ";
-    // cin >> alfa;
-    // buscaMaxima(grafo, grupos, alfa);
+    int alfa;
+    cout << "\nalfa: ";
+    cin >> alfa;
+    grupos = buscaMaxima(grafo, grupos, alfa);
 
-    // Comeca perturbacao
-    Perturbacao perturbacao;
-    int qtdIteracoes;
-    
-    cout << "\nForca da perturbacao fraca: ";
-    cin >> qtdIteracoes;
-    BuscaLocal buscaLocal(grafo);
-    grupos = perturbacao.perturbacaoFraca(grafo, grupos, qtdIteracoes, buscaLocal);
     somatorioTotal = 0;
     realizaSomatorioDaSolucao(somatorioTotal, grupos);
-    cout << "\nSomatorio apos perturbacao fraca: " << somatorioTotal;
-    
+    cout << "\nSomatorio apos busca maxima: " << somatorioTotal;
     cout << "\n\n";
+
+    // Comeca perturbacao
+    // Perturbacao perturbacao;
+    // int qtdIteracoes;
+    
+    // cout << "\nForca da perturbacao fraca: ";
+    // cin >> qtdIteracoes;
+    // BuscaLocal buscaLocal(grafo);
+    // grupos = perturbacao.perturbacaoFraca(grafo, grupos, qtdIteracoes, buscaLocal);
+    // somatorioTotal = 0;
+    // realizaSomatorioDaSolucao(somatorioTotal, grupos);
+    // cout << "\nSomatorio apos perturbacao fraca: " << somatorioTotal;
+    
+    // cout << "\n\n";
 
     // cout << "\n\nForca da perturbacao forte: ";
     // cin >> qtdIteracoes;
@@ -166,19 +197,29 @@ void solucaoInicialWJ(string nomeArquivo) {
     realizaSomatorioDaSolucao(somatorioTotal, grupos);
     cout << "\nSolucao inicial: " << somatorioTotal << endl;
     
-    // Comeca perturbacao
-    Perturbacao perturbacao;
-    int qtdIteracoes;
-    
-    cout << "\nForca da perturbacao fraca: ";
-    cin >> qtdIteracoes;
-    BuscaLocal buscaLocal(grafo);
-    grupos = perturbacao.perturbacaoFraca(grafo, grupos, qtdIteracoes, buscaLocal);
+    int alfa;
+    cout << "\nalfa: ";
+    cin >> alfa;
+    grupos = buscaMaxima(grafo, grupos, alfa);
+
     somatorioTotal = 0;
     realizaSomatorioDaSolucao(somatorioTotal, grupos);
-    cout << "\nSomatorio apos perturbacao fraca: " << somatorioTotal;
-    
+    cout << "\nSomatorio apos busca maxima: " << somatorioTotal;
     cout << "\n\n";
+
+    // Comeca perturbacao
+    // Perturbacao perturbacao;
+    // int qtdIteracoes;
+    
+    // cout << "\nForca da perturbacao fraca: ";
+    // cin >> qtdIteracoes;
+    // BuscaLocal buscaLocal(grafo);
+    // grupos = perturbacao.perturbacaoFraca(grafo, grupos, qtdIteracoes, buscaLocal);
+    // somatorioTotal = 0;
+    // realizaSomatorioDaSolucao(somatorioTotal, grupos);
+    // cout << "\nSomatorio apos perturbacao fraca: " << somatorioTotal;
+    
+    // cout << "\n\n";
     
     // cout << "\n\nForca da perturbacao forte: ";
     // cin >> qtdIteracoes;
@@ -201,9 +242,9 @@ int main() {
     cout << "Nome do arquivo: ";
     cin >> nomeArquivo;
     
-    // solucaoInicialLH(nomeArquivo);
+    solucaoInicialLH(nomeArquivo);
 
-    // solucaoInicialGC(nomeArquivo);
+    solucaoInicialGC(nomeArquivo);
     
     solucaoInicialWJ(nomeArquivo);
 

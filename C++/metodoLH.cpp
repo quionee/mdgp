@@ -77,8 +77,8 @@ std::vector<Grupo> MetodoLH::gerarSolucao(Grafo* grafo) {
         
         while (melhorou) {
             melhorou = false;
-            buscaLocal.insercaoPrincipal(solucoes[l], melhorou);
-            buscaLocal.swapPrincipal(melhorou);
+            buscaLocal.insercaoAlgoritmo(solucoes[l], melhorou);
+            buscaLocal.swapAlgoritmo(melhorou);
         }
         
         buscaLocal.atualizaSolucao(grafo, solucoes[l]);

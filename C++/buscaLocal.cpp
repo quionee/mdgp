@@ -2,6 +2,8 @@
 #include <fstream>
 #include "buscaLocal.hpp"
 
+using namespace std;
+
 BuscaLocal::BuscaLocal(Grafo* grafo) {
     matriz = grafo->getMatrizAdjacencia();
 }
@@ -82,9 +84,9 @@ std::vector<Grupo> BuscaLocal::buscaLocal(Grafo* grafo, std::vector<Grupo> soluc
     bool melhorou = true;
     while (melhorou) {
         melhorou = false;
-        insercaoPrincipal(solucaoFinal, melhorou);
-        swapPrincipal(melhorou);
-        swapEmCadeia(melhorou);
+        insercaoAlgoritmo(solucaoFinal, melhorou);
+        swapAlgoritmo(melhorou);
+        // swapEmCadeiaAlgoritmo(melhorou);
     }
     atualizaSolucao(grafo, solucaoFinal);
     return solucaoFinal;
@@ -94,12 +96,12 @@ std::vector<Grupo> BuscaLocal::insercao(Grafo* grafo, std::vector<Grupo> solucao
     std::vector<Grupo> solucaoFinal = solucao;
     criaVariaveis(grafo, solucaoFinal);
     bool melhorou = false;
-    insercaoPrincipal(solucaoFinal, melhorou);
+    insercaoAlgoritmo(solucaoFinal, melhorou);
     atualizaSolucao(grafo, solucaoFinal);
     return solucaoFinal;
 }
 
-void BuscaLocal::insercaoPrincipal(std::vector<Grupo> grupos, bool &melhorou) {
+void BuscaLocal::insercaoAlgoritmo(std::vector<Grupo> grupos, bool &melhorou) {
     for (int v = 0; v < int(vetorY.size()); ++v) {
         for (int g = 0; g < int(vetorZ.size()); ++g) {
             if ((vetorY[v] != g) and (vetorZ[vetorY[v]] > grupos[vetorY[v]].getLimiteInferior()) and (vetorZ[g] < grupos[g].getLimiteSuperior())) {
@@ -118,6 +120,15 @@ void BuscaLocal::insercaoPrincipal(std::vector<Grupo> grupos, bool &melhorou) {
     }
 }
 
+std::vector<Grupo> BuscaLocal::swap(Grafo* grafo, std::vector<Grupo> solucao) {
+    std::vector<Grupo> solucaoFinal = solucao;
+    criaVariaveis(grafo, solucaoFinal);
+    bool melhorou = false;
+    swapAlgoritmo(melhorou);
+    atualizaSolucao(grafo, solucaoFinal);
+    return solucaoFinal;
+}
+
 void BuscaLocal::atualizaMatrizGamaInsercao(int grupoV, int grupoU, int elementoV) {
     for (int u = 0; u < int(matrizGama.size()); ++u) {
         if (u != elementoV) {
@@ -125,10 +136,9 @@ void BuscaLocal::atualizaMatrizGamaInsercao(int grupoV, int grupoU, int elemento
             matrizGama[u][grupoU] = matrizGama[u][grupoU] + matriz[elementoV][u];
         }
     }
-    
 }
 
-void BuscaLocal::swapPrincipal(bool &melhorou) {
+void BuscaLocal::swapAlgoritmo(bool &melhorou) {
     for (int v = 0; v < (int(vetorY.size()) - 1); ++v) {
         for (int u = v + 1; u < int(vetorY.size()); ++u) {
             if (vetorY[v] != vetorY[u]) {
@@ -155,7 +165,16 @@ void BuscaLocal::swapAux(int elementoV, int elementoU) {
     vetorY[elementoU] = aux;
 }
 
-void BuscaLocal::swapEmCadeia(bool &melhorou) {
+std::vector<Grupo> BuscaLocal::swapEmCadeia(Grafo* grafo, std::vector<Grupo> solucao) {
+    std::vector<Grupo> solucaoFinal = solucao;
+    criaVariaveis(grafo, solucaoFinal);
+    bool melhorou = false;
+    swapEmCadeiaAlgoritmo(melhorou);
+    atualizaSolucao(grafo, solucaoFinal);
+    return solucaoFinal;
+}
+
+void BuscaLocal::swapEmCadeiaAlgoritmo(bool &melhorou) {
     for (int v = 0; v < (int(vetorY.size()) - 2); ++v) {
         for (int u = v + 1; u < (int(vetorY.size()) - 1); ++u) {
             for (int w = u + 1; w < int(vetorY.size()); ++w) {
