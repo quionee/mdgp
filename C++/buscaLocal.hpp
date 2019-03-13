@@ -8,17 +8,38 @@
 #include "grupo.hpp"
 
 class BuscaLocal {
+    private:
+        std::vector<int> vetorY;
+        std::vector<int> vetorZ;
+        std::vector<std::vector<double> > matrizGama;
+        double** matriz;
+
+        void atualizaMatrizGamaInsercao(int grupoI, int grupoJ, int elementoV);
+        void atualizaMatrizGamaSwap(int grupoI, int grupoJ, int elementoV, int elementoU);
+        void swapAux(int elementoV, int elementoU);
+        void atualizaMatrizGamaSwapEmCadeia(int grupoV, int grupoU, int grupoW, int elementoV, int elementoU, int elementoW);
+        void swapEmCadeiaAux(int elementoV, int elementoU, int elementoW);
     public:
-        BuscaLocal();
+        BuscaLocal(Grafo* grafo);
         ~BuscaLocal();
-        void insercao(std::vector<Grupo> grupos, std::vector<int> &vetorY, std::vector<int> &vetorZ, std::vector<std::vector<double> > &matrizGama, bool &melhorou, double &f, double** matriz);
-        void atualizaMatrizGamaInsercao(std::vector<std::vector<double> > &matrizGama, int grupoI, int grupoJ, int elementoV, double** matriz);
-        void swap(std::vector<int> &vetorY, std::vector<std::vector<double> > &matrizGama, bool &melhorou, double &f, double** matriz);
-        void atualizaMatrizGamaSwap(std::vector<std::vector<double> > &matrizGama, int grupoI, int grupoJ, int elementoV, int elementoU, double** matriz);
-        void swapAux(std::vector<int> &vetorY, int elementoV, int elementoU);
-        void swapEmCadeia(std::vector<int> &vetorY, std::vector<std::vector<double> > &matrizGama, bool &melhorou, double &f, double** matriz);
-        void atualizaMatrizGamaSwapEmCadeia(std::vector<std::vector<double> > &matrizGama, int grupoV, int grupoU, int grupoW, int elementoV, int elementoU, int elementoW, double** matriz);
-        void swapEmCadeiaAux(std::vector<int> &vetorY, int elementoV, int elementoU, int elementoW);
+        
+        std::vector<int> getVetorY();
+        std::vector<int> getVetorZ();
+        std::vector<std::vector<double> > getMatrizGama();
+
+        void reiniciaVariaveis();
+
+        void criaVariaveis(Grafo* grafo, std::vector<Grupo> solucao);
+
+        std::vector<Grupo> buscaLocal(Grafo* grafo, std::vector<Grupo> solucao);
+
+        std::vector<Grupo> insercao(Grafo* grafo, std::vector<Grupo> solucao);
+
+        void insercaoPrincipal(std::vector<Grupo> grupos, bool &melhorou);
+        void swapPrincipal(bool &melhorou);
+        void swapEmCadeia(bool &melhorou);
+
+        void atualizaSolucao(Grafo* grafo, std::vector<Grupo> &grupos);
 };
 
 #endif

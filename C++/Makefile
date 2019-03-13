@@ -11,7 +11,7 @@ LDFLAGS =
 LDLIBS = 
 
 OBJECTS = main.o grafo.o grupo.o solucaoInicial.o metodoLH.o metodoGC.o\
-	metodoWJ.o buscaLocal.o
+	metodoWJ.o buscaLocal.o perturbacao.o
 
 # first, try to compile from this project
 %.o: %.cpp %.hpp
@@ -26,7 +26,7 @@ OBJECTS = main.o grafo.o grupo.o solucaoInicial.o metodoLH.o metodoGC.o\
 #~ 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -o $@ -c $<
 
 $(APPLICATION): $(OBJECTS) main.o grafo.o grupo.o solucaoInicial.o\
-	metodoLH.o metodoGC.o metodoWJ.o buscaLocal.o
+	metodoLH.o metodoGC.o metodoWJ.o buscaLocal.o perturbacao.o
 	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 #gdb:

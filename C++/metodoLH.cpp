@@ -67,96 +67,24 @@ std::vector<Grupo> MetodoLH::gerarSolucao(Grafo* grafo) {
         //~ }
         //~ cout << "\n\nSOMATORIO: " << somatorio << endl;
     //~ }
-    
-    std::vector<int> vetorY;
-    std::vector<int> vetorZ;
-    for (int l = 0; l < qtdSolucoesFactiveis; ++l) {
-        // vetor de coordenadas dos elementos, indica a qual grupo cada elemento pertence
-        vetorY.resize(grafo->getQtdElementos());
-        
-        // vetor de tamanhos dos grupos, indica qual o tamanho de cada grupo
-        vetorZ.resize(grafo->getQtdGrupos());
-        
-        for (int i = 0; i < grafo->getQtdGrupos(); ++i) {
-            vetorZ[i] = solucoes[l][i].getQtdElementos();
-            
-            vector<int> elementosGrupoI = solucoes[l][i].getElementos();
-            for (int j = 0; j < solucoes[l][i].getQtdElementos(); ++j) {
-                vetorY[elementosGrupoI[j]] = i;
-            }
-        }
-        
-        //~ cout << "\n\nANTES MODIFICACOES";
-        //~ cout << "\n\nvetorY: ";
-        //~ for (unsigned int i = 0; i < vetorY.size(); ++i) {
-            //~ cout << vetorY[i] << " ";
-        //~ }
-        //~ cout << endl;
-        
-        //~ cout << "\n\nvetorZ: ";
-        //~ for (unsigned int i = 0; i < vetorZ.size(); ++i) {
-            //~ cout << vetorZ[i] << " ";
-        //~ }
-        //~ cout << endl;
-        
-        // matriz que armazena o valor do movimento
-        vector<vector<double> > matrizGama;
-        for (int lin = 0; lin < grafo->getQtdElementos(); ++lin) {
-            vector<double> vetorAux;
-            
-            for (int col = 0; col < grafo->getQtdGrupos(); ++col) {
-                vetorAux.push_back(0);
-            }
-            
-            matrizGama.push_back(vetorAux);
-        }
 
-        //~ // andar pelos grupos realizando o somatorio
-        for (int i = 0; i < grafo->getQtdElementos(); ++i) {
-            for (int j = 0; j < grafo->getQtdGrupos(); ++j) {
-                vector<int> elementosGrupoJ = solucoes[l][j].getElementos();
-                for (int k = 0; k < solucoes[l][j].getQtdElementos(); ++k) {
-                    matrizGama[i][j] += matriz[i][elementosGrupoJ[k]];
-                }
-            }
-        }
-        
-        double f = 0;
+    cout << "\n\né isto aí\n\n";
+    for (int l = 0; l < qtdSolucoesFactiveis; ++l) {
+        BuscaLocal buscaLocal(grafo);
+
+        buscaLocal.criaVariaveis(grafo, solucoes[l]);
         bool melhorou = true;
-        BuscaLocal buscaLocal;
+        
         while (melhorou) {
             melhorou = false;
-            buscaLocal.insercao(solucoes[l], vetorY, vetorZ, matrizGama, melhorou, f, matriz);
-            
-            buscaLocal.swap(vetorY, matrizGama, melhorou, f, matriz);
+            buscaLocal.insercaoPrincipal(solucoes[l], melhorou);
+            buscaLocal.swapPrincipal(melhorou);
         }
         
-        // zera variaveis dos grupos (exceto os limites)
-        for (int i = 0; i < grafo->getQtdGrupos(); ++i) {
-            solucoes[l][i].zeraVariaveis();
-        }
-        
-        // atualizando os elementos e as quantidades de elementos
-        for (int i = 0; i < grafo->getQtdElementos(); ++i) {
-            solucoes[l][vetorY[i]].setElementos(i);
-            solucoes[l][vetorY[i]].setQtdElementos();
-        }
-        
-        // atualizando as arestas e os somatorios das distancias dos grupos
-        for (int i = 0; i < grafo->getQtdGrupos(); ++i) {
-            for (int j = 0; j < solucoes[l][i].getQtdElementos() - 1; ++j) {
-                for (int k = j + 1; k < solucoes[l][i].getQtdElementos(); ++k) {
-                    solucoes[l][i].setArestasElementos(solucoes[l][i].getElemento(j), solucoes[l][i].getElemento(k));
-                    solucoes[l][i].setArestasValor(matriz[solucoes[l][i].getElemento(j)][solucoes[l][i].getElemento(k)]);
-                    solucoes[l][i].setSomatorioDistancias(matriz[solucoes[l][i].getElemento(j)][solucoes[l][i].getElemento(k)]);
-                }
-            }
-        }
-        
-        vetorY.clear();
-        vetorZ.clear();
+        buscaLocal.atualizaSolucao(grafo, solucoes[l]);
     }
     
+
     double maiorSomatorio = 0;
     int melhorSolucaoInicial;
     for (unsigned int i = 0; i < solucoes.size(); ++i) {
@@ -230,7 +158,3 @@ void MetodoLH::atualizaGrafo(Grafo* grafo, int elemento, std::vector<int> &eleme
     grafo->setInseridosUm(elemento);
     grafo->setElementosSemGrupoRemove(elementosSemGrupo, elemento);
 }
-
-//~ void MetodoLH::pertubacaoFraca() {
-    
-//~ }

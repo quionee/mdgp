@@ -2,8 +2,6 @@
 #include <fstream>
 #include "metodoGC.hpp"
 
-using namespace std;
-
 MetodoGC::MetodoGC() : SolucaoInicial() {
 }
 

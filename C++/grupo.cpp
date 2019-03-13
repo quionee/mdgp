@@ -52,10 +52,6 @@ double Grupo::getSomatorioDistancias() {
     return somatorioDistancias;
 }
 
-//~ double Grupo::getSomatorioTotal() {
-    //~ return somatorioTotal;
-//~ }
-
 void Grupo::setQtdElementos() {
     ++qtdElementos;
 }
