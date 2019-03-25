@@ -12,6 +12,8 @@ SolucaoInicial::~SolucaoInicial() {
     
 }
 
+// lê o arquivo cujo nome é passado por parâmetro e chama o construtor da classe Grafo com as variáveis
+// lidas do arquivo e retorna o grafo.
 Grafo* SolucaoInicial::leArquivo(std::string nomeArquivo) {
     std::ifstream arquivo;
     arquivo.open(nomeArquivo.c_str());

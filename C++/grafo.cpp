@@ -3,6 +3,18 @@
 
 using namespace std;
 
+// construtor da classe.
+// qtdElementos = inteiro que armazena a quantidade de vértices do grafo.
+// qtdGrupos = inteiro que armazena a quantidades de grupos a serem formados.
+// qtdArestas = inteiro que armazena a quantidade de arestas do grafo.
+// tipoDivisao = string que armazena tipo de divisão dos grupos, "ss" se os grupos forem do mesmo tamanho, "ds" caso contrário.
+// limites = ponteiro para ponteiro (matriz[i][j]), quando j = 0: os limites inferiores de cada grupo i,
+//           coluna j = 1: os limites superiores de cada grupo i.
+// arestasElementos = ponteiro para ponteiro (matriz[i][j]), as colunas são os elementos e as linhas as arestas.
+// arestasValor = vetor de ponteiros, os valores de cada aresta de "arestasElementos".
+// inseridos = vetor de ponteiros booleano, false se o elemento (posição do vetor) não tem grupo, true caso contrário.
+// elementosSemGrupo = vetor de inteiros, com os elementos sem grupo.
+// matrizAdjacencia = matriz de adjacência do grafo.
 Grafo::Grafo(int qtdElementos, int qtdGrupos, int qtdArestas, std::string tipoDivisao, int **limites, int **arestasElementos, double *arestasValor) {
     this->qtdElementos = qtdElementos;
     this->qtdGrupos = qtdGrupos;
@@ -77,14 +89,17 @@ double **Grafo::getMatrizAdjacencia() {
     return matrizAdjacencia;
 }
 
+// muda a variável inseridos inteira.
 void Grafo::setInseridos(bool *inseridos) {
     this->inseridos = inseridos;
 }
 
+// muda uma posição da variável inseridos.
 void Grafo::setInseridosUm(int elemento) {
     inseridos[elemento] = true;
 }
 
+// remove um elemento da variável elementosSemGrupo.
 void Grafo::setElementosSemGrupoRemove(std::vector<int> &elementosSemGrupo, int elemento) {
     for (unsigned int i = 0; i < elementosSemGrupo.size(); ++i) {
         if (elementosSemGrupo[i] == elemento) {
@@ -92,12 +107,15 @@ void Grafo::setElementosSemGrupoRemove(std::vector<int> &elementosSemGrupo, int 
         }
     }
 }
-        
+
+// atualiza a variável elementosSemGrupo inteira.
 void Grafo::setElementosSemGrupo(std::vector<int> elementosSemGrupo) {
     this->elementosSemGrupo = elementosSemGrupo;
 }
 
+// reinicia elementosSemGrupo.
 void Grafo::setReiniciaElementosSemGrupo() {
+    elementosSemGrupo.clear();
     for (int i = 0; i < qtdElementos; ++i) {
         elementosSemGrupo.push_back(i);
     }

@@ -3,12 +3,14 @@
 #include "metodoGC.hpp"
 
 MetodoGC::MetodoGC() : SolucaoInicial() {
+
 }
 
 MetodoGC::~MetodoGC() {
     
 }
 
+// método que gera a solução inicial utilizando o método GC.
 std::vector<Grupo> MetodoGC::gerarSolucao(Grafo* grafo) {
     std::vector<int> elementosAleatorios = divisaoInicial(grafo);
     
@@ -22,7 +24,9 @@ std::vector<Grupo> MetodoGC::gerarSolucao(Grafo* grafo) {
     return grupos;
 }
 
+// método que seleciona e retorna "qtdGrupos" elementos aleatórios para iniciar os grupos.
 std::vector<int> MetodoGC::divisaoInicial(Grafo* grafo) {
+    srand(time(0));
     std::vector<int> elementosAleatorios;
     int aux = 0;
     int posDisponiveis = grafo->getQtdElementos();
@@ -30,10 +34,13 @@ std::vector<int> MetodoGC::divisaoInicial(Grafo* grafo) {
     bool *inseridos = grafo->getInseridos();
     std::vector<int> elementosSemGrupo = grafo->getElementosSemGrupo();
     
+    // while roda até que "qtdGrupos" elementos sejam selecionados.
     while (aux < grafo->getQtdGrupos()) {
-        srand(time(0));
+        // a posição de um elemento é escolhida aleatoriamente.
         pos = rand() % posDisponiveis;
         
+        // se o elemento na posição "pos" ainda não foi escolhido,
+        // ele é adicionado ao vetor de "elementosAleatorios" que iniciam os grupos.
         if (!(inseridos[elementosSemGrupo[pos]])) {
             elementosAleatorios.push_back(elementosSemGrupo[pos]);
             inseridos[elementosSemGrupo[pos]] = true;
@@ -49,17 +56,21 @@ std::vector<int> MetodoGC::divisaoInicial(Grafo* grafo) {
     return elementosAleatorios;
 }
 
+// método que cria os "qtdGrupos" grupos com os elementos aleatórios selecionados no método "divisaoInicial".
 std::vector<Grupo> MetodoGC::criaGrupos(Grafo* grafo, std::vector<int> elementosAleatorios) {
+    // cria um vetor de grupos.
     std::vector<Grupo> grupos;
     int** limites = grafo->getLimites();
     
     for (int i = 0; i < grafo->getQtdGrupos(); ++i) {
+        // inicia cada posição do vetor de grupos, atribuindo os limites e um dos elementos de "elementosAleatorios".
         grupos.push_back(Grupo(limites[i][0], limites[i][1], elementosAleatorios[i]));
     }
     
     return grupos;
 }
 
+// método que atualiza os dados do grupo passado por parâmetro quando um elemento é adicionado a ele.
 void MetodoGC::atualizaGrupo(Grupo &grupo, int elemento, double** matriz) {
     grupo.setQtdElementos();
     grupo.setElementos(elemento);
@@ -69,16 +80,22 @@ void MetodoGC::atualizaGrupo(Grupo &grupo, int elemento, double** matriz) {
         grupo.setArestasElementos(elemento, grupo.getElementos()[j]);
         grupo.setArestasValor(matriz[elemento][grupo.getElementos()[j]]);
     }
-    
 }
 
+// método que atualiza os dados do grafo sobre os elementos ainda sem grupo.
 void MetodoGC::atualizaGrafo(Grafo* grafo, int elemento, std::vector<int> &elementosSemGrupo) {
     grafo->setInseridosUm(elemento);
     grafo->setElementosSemGrupoRemove(elementosSemGrupo, elemento);
 }
 
+// método que atribui elementos aos grupos respeitando o limite inferior de cada grupo individualmente.
 void MetodoGC::limiteInferior(Grafo* grafo, std::vector<Grupo> &grupos, double** matriz) {
+    srand(time(0));
+
     int limPosicoesDisponiveis = grafo->getQtdElementos() - grafo->getQtdGrupos();
+
+    // vetor de booleano, "false" se o grupo daquela posição ainda não atingiu seu limitante inferior,
+    // "true" caso contrário.
     bool gruposCompletos[grafo->getQtdGrupos()];
     for (int i = 0; i < grafo->getQtdGrupos(); ++i) {
         gruposCompletos[i] = false;
@@ -87,18 +104,18 @@ void MetodoGC::limiteInferior(Grafo* grafo, std::vector<Grupo> &grupos, double**
     std::vector<int> elementosSemGrupo = grafo->getElementosSemGrupo();
     
     bool terminou = false;
+    // while termina quando todos os grupos atingiram seus limitantes inferiores, considerando que ainda
+    // existam elementos sem grupo.
     while ((!terminou) and (elementosSemGrupo.size() > 0)) {
-        
         int qtdGruposProntos = 0;
-        srand(time(0));
         int pos = rand() % limPosicoesDisponiveis;
         int elemento = elementosSemGrupo[pos];
         
         double maiorSomatorio = 0;
         int grupoMaximizado = -1;
         double somatorioGrupoAtual = 0;
-        int i = 0; 
-        
+        int i = 0;
+        // escolhe em qual grupo o elemento escolhido será adicionado, maximizando o somatório das distâncias.
         while (i < grafo->getQtdGrupos()) {
             if (grupos[i].getQtdElementos() < grupos[i].getLimiteInferior()) {
                 somatorioGrupoAtual = 0;
@@ -118,6 +135,7 @@ void MetodoGC::limiteInferior(Grafo* grafo, std::vector<Grupo> &grupos, double**
             ++i;
         }
         
+        // atualiza os dados para inserção do elemento no grupo que maximiza o somatório.
         if (grupoMaximizado > -1) {
             atualizaGrupo(grupos[grupoMaximizado], elemento, matriz);
             atualizaGrafo(grafo, elemento, elementosSemGrupo);
@@ -134,16 +152,17 @@ void MetodoGC::limiteInferior(Grafo* grafo, std::vector<Grupo> &grupos, double**
             terminou = true;
         }
     }
-    
+
     grafo->setElementosSemGrupo(elementosSemGrupo);
-    
 }
 
+// método que atribui elementos aos grupos respeitando o limite superior de cada grupo individualmente.
 void MetodoGC::limiteSuperior(Grafo* grafo, std::vector<Grupo> &grupos, double** matriz) {
     std::vector<int> elementosSemGrupo = grafo->getElementosSemGrupo();
     
     int limPosicoesDisponiveis = elementosSemGrupo.size();
 
+    // while termina quando todos os elementos foram atribuídos a algum grupo.
     while (elementosSemGrupo.size() > 0) {
         srand(time(0));
         int pos = rand() % limPosicoesDisponiveis;
@@ -154,7 +173,7 @@ void MetodoGC::limiteSuperior(Grafo* grafo, std::vector<Grupo> &grupos, double**
         double maiorSomatorio = 0;
         double somatorioGrupoAtual = 0;
         int i = 0;
-        
+        // escolhe em qual grupo o elemento escolhido será adicionado, maximizando o somatório das distâncias.
         while (i < grafo->getQtdGrupos()) {
             if (grupos[i].getQtdElementos() < grupos[i].getLimiteSuperior()) {
                 somatorioGrupoAtual = 0;
@@ -171,10 +190,11 @@ void MetodoGC::limiteSuperior(Grafo* grafo, std::vector<Grupo> &grupos, double**
             ++i;
         }
         
+        // atualiza os dados para inserção do elemento no grupo que maximiza o somatório. 
         atualizaGrupo(grupos[grupoMaximizado], elemento, matriz);
         atualizaGrafo(grafo, elemento, elementosSemGrupo);
         --limPosicoesDisponiveis;
     }
+
     grafo->setElementosSemGrupo(elementosSemGrupo);
 }
-

@@ -1,6 +1,10 @@
 #include <iostream>
 #include "grupo.hpp"
 
+// construtor da classe que inicia com um elmento.
+// limiteInferior = limite inferior do grupo.
+// limtieSuperior = limite superior do grupo.
+// elemento = primeiro elemento do grupo atual.
 Grupo::Grupo(int limiteInferior, int limiteSuperior, int elemento) {
     this->limiteInferior = limiteInferior;
     this->limiteSuperior = limiteSuperior;
@@ -9,6 +13,9 @@ Grupo::Grupo(int limiteInferior, int limiteSuperior, int elemento) {
     somatorioDistancias = 0;
 }
 
+// construtor da classe.
+// limiteInferior = limite inferior do grupo.
+// limtieSuperior = limite superior do grupo.
 Grupo::Grupo(int limiteInferior, int limiteSuperior) {
     this->limiteInferior = limiteInferior;
     this->limiteSuperior = limiteSuperior;
@@ -52,14 +59,17 @@ double Grupo::getSomatorioDistancias() {
     return somatorioDistancias;
 }
 
+// incrementa a quantidade de elementos do grupo.
 void Grupo::setQtdElementos() {
     ++qtdElementos;
 }
 
+// adiciona um elemento ao grupo.
 void Grupo::setElementos(int elemento) {
     elementos.push_back(elemento);
 }
 
+// adiciona os elementos de uma aresta ao arestasElementos do grupo.
 void Grupo::setArestasElementos(int elemento1, int elemento2) {
     std::vector<int> arestaElementos;
     arestaElementos.push_back(elemento1);
@@ -67,14 +77,17 @@ void Grupo::setArestasElementos(int elemento1, int elemento2) {
     arestasElementos.push_back(arestaElementos);
 }
 
+// adiciona o valor de uma aresta ao arestasValor do grupo.
 void Grupo::setArestasValor(double valor) {
     arestasValor.push_back(valor);
 }
 
+// soma a somatorioDistancias um valor.
 void Grupo::setSomatorioDistancias(double valor) {
     somatorioDistancias += valor;
 }
 
+// zera as variáveis do grupo.
 void Grupo::zeraVariaveis() {
     qtdElementos = 0;
     elementos.clear();

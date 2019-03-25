@@ -39,36 +39,7 @@ std::vector<Grupo> MetodoLH::gerarSolucao(Grafo* grafo) {
         solucoes.push_back(grupos);
         grafo->setReiniciaElementosSemGrupo();
     }
-    
-    //~ for (unsigned int i = 0; i < solucoes.size(); ++i) {
-        //~ cout << "\n\nSolucao " << i << ": ";
-        //~ double somatorio = 0;
-        //~ for (unsigned int j = 0; j < solucoes[i].size(); ++j) {
-            //~ cout << "\n\nGRUPO " << j
-             //~ << "\nlimiteInferior: " << solucoes[i][j].getLimiteInferior()
-             //~ << "\nlimiteSuperior: " << solucoes[i][j].getLimiteSuperior()
-             //~ << "\nqtdElementos: " << solucoes[i][j].getQtdElementos()
-             //~ << "\nelementos: ";
-             
-            //~ for (unsigned int k = 0; k < solucoes[i][j].getElementos().size(); ++k) {
-                //~ cout << solucoes[i][j].getElemento(k) << " ";
-            //~ }
-            
-            //~ cout << "\narestas: ";
-            //~ vector<vector<int> >  arestasElementos = solucoes[i][j].getArestasElementos();
-            //~ vector<double> arestasValor = solucoes[i][j].getArestasValor();
-            //~ for (unsigned int k = 0; k < arestasElementos.size(); ++k) {
-                //~ cout << arestasElementos[k][0] << ", "
-                     //~ << arestasElementos[k][1] << ", "
-                     //~ << arestasValor[k] << "; ";
-            //~ }
-            //~ cout << "\nsomatorioDistancias: " << solucoes[i][j].getSomatorioDistancias();
-            //~ somatorio += solucoes[i][j].getSomatorioDistancias();
-        //~ }
-        //~ cout << "\n\nSOMATORIO: " << somatorio << endl;
-    //~ }
 
-    cout << "\n\né isto aí\n\n";
     for (int l = 0; l < qtdSolucoesFactiveis; ++l) {
         BuscaLocal buscaLocal(grafo);
 
@@ -92,7 +63,7 @@ std::vector<Grupo> MetodoLH::gerarSolucao(Grafo* grafo) {
         for (unsigned int j = 0; j < solucoes[i].size(); ++j) {
             somatorio += solucoes[i][j].getSomatorioDistancias();
         }
-        //~ cout << "\nsomatorio: " << somatorio << endl;
+        
         if (somatorio > maiorSomatorio) {
             maiorSomatorio = somatorio;
             melhorSolucaoInicial = i;

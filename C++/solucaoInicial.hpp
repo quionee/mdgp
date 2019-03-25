@@ -13,7 +13,7 @@ class SolucaoInicial {
         virtual ~SolucaoInicial();
         double getSomatorioTotal();
         Grafo* leArquivo(std::string nomeArquivo);
-        virtual std::vector<Grupo> gerarSolucao(Grafo* grafo) = 0;
+        virtual std::vector<Grupo> gerarSolucao(Grafo* grafo) = 0; // método abstrato.
 };
 
 #endif
