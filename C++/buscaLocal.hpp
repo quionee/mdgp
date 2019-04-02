@@ -23,9 +23,13 @@ class BuscaLocal {
         BuscaLocal(Grafo* grafo);
         ~BuscaLocal();
         
+        std::vector<int> getVetorY();
+        std::vector<int> getVetorZ();
+        std::vector<std::vector<double> > getMatrizGama();
+
         void reiniciaVariaveis();
 
-        void criaVariaveis(Grafo* grafo, std::vector<Grupo> solucao);
+        void criaVariaveis(Grafo* grafo, std::vector<Grupo> &solucao);
 
         std::vector<Grupo> buscaLocal(Grafo* grafo, std::vector<Grupo> solucao);
 

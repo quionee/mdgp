@@ -57,7 +57,7 @@ std::vector<Grupo> Perturbacao::perturbacaoForteUmaBuscaLocal(Grafo* grafo, std:
 }
 
 // método de perturbação fraca com possibilidade das três buscas locais.
-std::vector<Grupo> Perturbacao::perturbacaoFraca(Grafo* grafo, std::vector<Grupo> s0, int qtdIteracoes, BuscaLocal &buscaLocal) {
+std::vector<Grupo> Perturbacao::perturbacaoFraca(Grafo* grafo, std::vector<Grupo> &s0, int qtdIteracoes, BuscaLocal &buscaLocal) {
     std::vector<Grupo> sp = s0;
     std::vector<Grupo> s;
     std::vector<Grupo> sLinha;
@@ -113,11 +113,19 @@ std::vector<Grupo> Perturbacao::perturbacaoFraca(Grafo* grafo, std::vector<Grupo
 }
 
 // método de perturbação forte com possibilidade das três buscas locais.
-std::vector<Grupo> Perturbacao::perturbacaoForte(Grafo* grafo, std::vector<Grupo> s0, int qtdIteracoes, BuscaLocal &buscaLocal) {
+std::vector<Grupo> Perturbacao::perturbacaoForte(Grafo* grafo, std::vector<Grupo> &s0, int qtdIteracoes, BuscaLocal &buscaLocal) {
     srand(time(0));
     
     std::vector<Grupo> sp = s0;
     std::vector<Grupo> s;
+
+    // for (int i = 0; i < int(s0.size()); ++i) {
+    //     std::cout << "elementos grupo s0 " << i << ": ";
+    //     for(int j = 0; j < s0[i].getQtdElementos(); ++j) {
+    //         std::cout << s0[i].getElemento(j) << " ";
+    //     }
+    //     std::cout << "\n";
+    // }
 
     for (int i = 0; i < qtdIteracoes; ++i) {
         // int numeroAleatorio = rand() % 3;
@@ -135,6 +143,22 @@ std::vector<Grupo> Perturbacao::perturbacaoForte(Grafo* grafo, std::vector<Grupo
         // else {
         //     s = buscaLocal.swapEmCadeia(grafo, sp);
         // }
+
+    // for (int i = 0; i < int(sp.size()); ++i) {
+    //     std::cout << "elementos grupo sp " << i << ": ";
+    //     for (int j = 0; j < sp[i].getQtdElementos(); ++j) {
+    //         std::cout << sp[i].getElemento(j) << " ";
+    //     }
+    //     std::cout << "\n";
+    // }
+    // for (int i = 0; i < int(s.size()); ++i) {
+    //     std::cout << " elementos grupo s " << i << ": ";
+    //     for (int j = 0; j < s[i].getQtdElementos(); ++j) {
+    //         std::cout << s[i].getElemento(j) << " ";
+    //     }
+    //     std::cout << "\n";
+    // }
+
         sp = s;
     }
     return sp;

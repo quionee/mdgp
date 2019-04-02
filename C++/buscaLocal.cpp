@@ -38,7 +38,7 @@ void BuscaLocal::reiniciaVariaveis() {
     matrizGama.clear();
 }
 
-void BuscaLocal::criaVariaveis(Grafo* grafo, std::vector<Grupo> solucao) {
+void BuscaLocal::criaVariaveis(Grafo* grafo, std::vector<Grupo> &solucao) {
     reiniciaVariaveis();
 
     // vetor de coordenadas dos elementos, indica a qual grupo cada elemento pertence
@@ -76,6 +76,28 @@ void BuscaLocal::criaVariaveis(Grafo* grafo, std::vector<Grupo> solucao) {
             }
         }
     }
+
+    // cout << "\n\nvetorY: ";
+    // for(int i = 0; i < grafo->getQtdElementos(); ++i) {
+    //     cout << vetorY[i] << " ";
+    // }
+    
+    // cout << "\n\nvetorZ: ";
+    // for(int i = 0; i < grafo->getQtdGrupos(); ++i) {
+    //     cout << vetorZ[i] << " ";
+    // }
+    
+    // cout << "\n\nmatrizGama:\n\n    0   1\n";
+    // for(int i = 0; i < grafo->getQtdElementos(); ++i) {
+    //     cout << i << ": ";
+    //     for(int j = 0; j < grafo->getQtdGrupos(); ++j) {
+    //         cout << matrizGama[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
+    
+
+
 }
 
 std::vector<Grupo> BuscaLocal::buscaLocal(Grafo* grafo, std::vector<Grupo> solucao) {
@@ -86,7 +108,7 @@ std::vector<Grupo> BuscaLocal::buscaLocal(Grafo* grafo, std::vector<Grupo> soluc
         melhorou = false;
         insercaoAlgoritmo(solucaoFinal, melhorou);
         swapAlgoritmo(melhorou);
-        // swapEmCadeiaAlgoritmo(melhorou);
+        swapEmCadeiaAlgoritmo(melhorou);
     }
     atualizaSolucao(grafo, solucaoFinal);
     return solucaoFinal;
@@ -120,15 +142,6 @@ void BuscaLocal::insercaoAlgoritmo(std::vector<Grupo> grupos, bool &melhorou) {
     }
 }
 
-std::vector<Grupo> BuscaLocal::swap(Grafo* grafo, std::vector<Grupo> solucao) {
-    std::vector<Grupo> solucaoFinal = solucao;
-    criaVariaveis(grafo, solucaoFinal);
-    bool melhorou = false;
-    swapAlgoritmo(melhorou);
-    atualizaSolucao(grafo, solucaoFinal);
-    return solucaoFinal;
-}
-
 void BuscaLocal::atualizaMatrizGamaInsercao(int grupoV, int grupoU, int elementoV) {
     for (int u = 0; u < int(matrizGama.size()); ++u) {
         if (u != elementoV) {
@@ -138,16 +151,45 @@ void BuscaLocal::atualizaMatrizGamaInsercao(int grupoV, int grupoU, int elemento
     }
 }
 
+std::vector<Grupo> BuscaLocal::swap(Grafo* grafo, std::vector<Grupo> solucao) {
+    std::vector<Grupo> solucaoFinal = solucao;
+    criaVariaveis(grafo, solucaoFinal);
+    bool melhorou = false;
+    swapAlgoritmo(melhorou);
+    atualizaSolucao(grafo, solucaoFinal);
+    return solucaoFinal;
+}
+
 void BuscaLocal::swapAlgoritmo(bool &melhorou) {
     for (int v = 0; v < (int(vetorY.size()) - 1); ++v) {
         for (int u = v + 1; u < int(vetorY.size()); ++u) {
             if (vetorY[v] != vetorY[u]) {
                 double deltaF = (matrizGama[v][vetorY[u]] - matrizGama[v][vetorY[v]]) + (matrizGama[u][vetorY[v]] - matrizGama[u][vetorY[u]]) - (2 * matriz[v][u]);
+                // cout << "\ndeltaF: " << deltaF;
                 if (deltaF > 0) {
+                    // cout << "\n\nDELTA F MAIOR QUE ZERO, VAI TROCAR " << v << " com " << u;
                     atualizaMatrizGamaSwap(vetorY[v], vetorY[u], v, u);
-                    
                     swapAux(v, u);
                     melhorou = true;
+
+                    // cout << "\n\nvetorY: ";
+                    // for(int i = 0; i < int(vetorY.size()); ++i) {
+                    //     cout << vetorY[i] << " ";
+                    // }
+                    
+                    // cout << "\n\nvetorZ: ";
+                    // for(int i = 0; i < int(vetorZ.size()); ++i) {
+                    //     cout << vetorZ[i] << " ";
+                    // }
+                    
+                    // cout << "\n\nmatrizGama:\n\n    0   1\n";
+                    // for(int i = 0; i < int(vetorY.size()); ++i) {
+                    //     cout << i << ": ";
+                    //     for(int j = 0; j < int(vetorZ.size()); ++j) {
+                    //         cout << matrizGama[i][j] << " ";
+                    //     }
+                    //     cout << endl;
+                    // }
                 }
             }
         }
@@ -166,6 +208,7 @@ void BuscaLocal::swapAux(int elementoV, int elementoU) {
 }
 
 std::vector<Grupo> BuscaLocal::swapEmCadeia(Grafo* grafo, std::vector<Grupo> solucao) {
+    cout << "\n\nENTREI SWAP EM CADEIAAAAAAAAAAAAA\n\n";
     std::vector<Grupo> solucaoFinal = solucao;
     criaVariaveis(grafo, solucaoFinal);
     bool melhorou = false;
@@ -175,19 +218,72 @@ std::vector<Grupo> BuscaLocal::swapEmCadeia(Grafo* grafo, std::vector<Grupo> sol
 }
 
 void BuscaLocal::swapEmCadeiaAlgoritmo(bool &melhorou) {
+    // cout << "\n\nENTREI EM SWAP EM CADEIA ALGORITMOOOOOOOOOOOOO\n\n";
+
     for (int v = 0; v < (int(vetorY.size()) - 2); ++v) {
         for (int u = v + 1; u < (int(vetorY.size()) - 1); ++u) {
             for (int w = u + 1; w < int(vetorY.size()); ++w) {
                 if ((vetorY[v] != vetorY[u]) and (vetorY[u] != vetorY[w])) {
-                    double deltaF = ((matrizGama[v][vetorY[u]] - matrizGama[v][vetorY[v]])
+                    double deltaF = (((matrizGama[v][vetorY[u]] - matrizGama[v][vetorY[v]])
                                     + (matrizGama[u][vetorY[w]] - matrizGama[u][vetorY[u]])
-                                    + (matrizGama[w][vetorY[v]] - matrizGama[w][vetorY[w]])
+                                    + (matrizGama[w][vetorY[v]] - matrizGama[w][vetorY[w]]))
                                     - (matriz[v][u] + matriz[u][w] + matriz[w][v]));
                     if (deltaF > 0) {
-                        atualizaMatrizGamaSwapEmCadeia(vetorY[v], vetorY[u], vetorY[w], v, u, w);
+                        // cout << "\n                                                 deltaF: " << deltaF
+                        //      << "\nv: " << v << " / vetorY[v]: " << vetorY[v]
+                        //      << "\nu: " << u << " / vetorY[u]: " << vetorY[u]
+                        //      << "\nw: " << w << " / vetorY[w]: " << vetorY[w]
+                        //      << "\nmatrizGama[v][vetorY[u]]: " << matrizGama[v][vetorY[u]]
+                        //      << "\nmatrizGama[v][vetorY[v]]: " << matrizGama[v][vetorY[v]]
+                        //      << "\nmatrizGama[u][vetorY[w]]: " << matrizGama[u][vetorY[w]]
+                        //      << "\nmatrizGama[u][vetorY[u]]: " << matrizGama[u][vetorY[u]]
+                        //      << "\nmatrizGama[w][vetorY[v]]: " << matrizGama[w][vetorY[v]]
+                        //      << "\nmatrizGama[w][vetorY[w]]: " << matrizGama[w][vetorY[w]]
+                        //      << "\nmatriz[v][u]: " << matriz[v][u]
+                        //      << "\nmatriz[u][w]: " << matriz[u][w]
+                        //      << "\nmatriz[w][v]: " << matriz[w][v];
+
+                        // cout << "\n\nvetorY: ";
+                        // for(int i = 0; i < int(vetorY.size()); ++i) {
+                        //     cout << vetorY[i] << " ";
+                        // }
                         
+                        // cout << "\n\nvetorZ: ";
+                        // for(int i = 0; i < int(vetorZ.size()); ++i) {
+                        //     cout << vetorZ[i] << " ";
+                        // }
+                        
+                        // cout << "\n\nmatrizGama:\n\n    0   1   2   3\n";
+                        // for(int i = 0; i < int(vetorY.size()); ++i) {
+                        //     cout << i << ": ";
+                        //     for(int j = 0; j < int(vetorZ.size()); ++j) {
+                        //         cout << matrizGama[i][j] << " ";
+                        //     }
+                        //     cout << endl;
+                        // }
+
+                        atualizaMatrizGamaSwapEmCadeia(vetorY[v], vetorY[u], vetorY[w], v, u, w);
                         swapEmCadeiaAux(v, u, w);
                         melhorou = true;
+
+                        // cout << "\n\nAPOOOOOOOOOS\nvetorY: ";
+                        // for(int i = 0; i < int(vetorY.size()); ++i) {
+                        //     cout << vetorY[i] << " ";
+                        // }
+                        
+                        // cout << "\n\nvetorZ: ";
+                        // for(int i = 0; i < int(vetorZ.size()); ++i) {
+                        //     cout << vetorZ[i] << " ";
+                        // }
+                        
+                        // cout << "\n\nmatrizGama:\n\n    0   1   2   3\n";
+                        // for(int i = 0; i < int(vetorY.size()); ++i) {
+                        //     cout << i << ": ";
+                        //     for(int j = 0; j < int(vetorZ.size()); ++j) {
+                        //         cout << matrizGama[i][j] << " ";
+                        //     }
+                        //     cout << endl;
+                        // }
                     }
                 }
             }
@@ -203,9 +299,9 @@ void BuscaLocal::atualizaMatrizGamaSwapEmCadeia(int grupoV, int grupoU, int grup
 
 void BuscaLocal::swapEmCadeiaAux(int elementoV, int elementoU, int elementoW) {
     int aux = vetorY[elementoV];
-    vetorY[elementoV] = vetorY[elementoW];
-    vetorY[elementoW] = vetorY[elementoU];
-    vetorY[elementoU] = aux;
+    vetorY[elementoV] = vetorY[elementoU];
+    vetorY[elementoU] = vetorY[elementoW];
+    vetorY[elementoW] = aux;
 }
 
 void BuscaLocal::atualizaSolucao(Grafo* grafo, std::vector<Grupo> &grupos) {
