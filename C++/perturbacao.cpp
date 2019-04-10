@@ -64,38 +64,28 @@ std::vector<Grupo> Perturbacao::perturbacaoFraca(Grafo* grafo, std::vector<Grupo
     srand(time(0));
 
     for (int i = 0; i < qtdIteracoes; ++i) {
-        // int numeroAleatorio = rand() % 3;
-
-        int numeroAleatorio = rand() % 2;
+        int numeroAleatorio = rand() % 3;
         if (numeroAleatorio == 0) {
             s = buscaLocal.insercao(grafo, sp);
         }
-        else {
+        else if (numeroAleatorio == 1) {
             s = buscaLocal.swap(grafo, sp);
         }
-        // else if (numeroAleatorio == 1) {
-        //     s = buscaLocal.swap(grafo, sp);
-        // }
-        // else {
-        //     s = buscaLocal.swapEmCadeia(grafo, sp);
-        // }
+        else {
+            s = buscaLocal.swapEmCadeia(grafo, sp);
+        }
         
         for (int j = 0; j < grafo->getQtdElementos(); ++j) {
-            // numeroAleatorio = rand() % 3;
-
-            numeroAleatorio = rand() % 2;
+            numeroAleatorio = rand() % 3;
             if (numeroAleatorio == 0) {
                 sLinha = buscaLocal.insercao(grafo, sp);
             }
-            else {
+            else if (numeroAleatorio == 1) {
                 sLinha = buscaLocal.swap(grafo, sp);
             }
-            // else if (numeroAleatorio == 1) {
-            //     sLinha = buscaLocal.swap(grafo, sp);
-            // }
-            // else {
-            //     sLinha = buscaLocal.swapEmCadeia(grafo, sp);
-            // }
+            else {
+                sLinha = buscaLocal.swapEmCadeia(grafo, sp);
+            }
             
             double somatorioS = 0, somatorioS1 = 0;
             for (int i = 0; i < grafo->getQtdGrupos(); ++i) {
@@ -128,37 +118,22 @@ std::vector<Grupo> Perturbacao::perturbacaoForte(Grafo* grafo, std::vector<Grupo
     // }
 
     for (int i = 0; i < qtdIteracoes; ++i) {
-        // int numeroAleatorio = rand() % 3;
-
-        int numeroAleatorio = rand() % 2;
+        int numeroAleatorio = rand() % 3;
         if (numeroAleatorio == 0) {
-            s = buscaLocal.insercao(grafo, sp);
+            s = buscaLocal.insercaoSemValorDoMovimento(grafo, sp);
+        }
+        else if (numeroAleatorio == 1) {
+            s = buscaLocal.swapSemValorDoMovimento(grafo, sp);
         }
         else {
-            s = buscaLocal.swap(grafo, sp);
+            s = buscaLocal.swapEmCadeia(grafo, sp);
         }
-        // else if (numeroAleatorio == 1) {
-        //     s = buscaLocal.swap(grafo, sp);
-        // }
-        // else {
-        //     s = buscaLocal.swapEmCadeia(grafo, sp);
-        // }
 
-    // for (int i = 0; i < int(sp.size()); ++i) {
-    //     std::cout << "elementos grupo sp " << i << ": ";
-    //     for (int j = 0; j < sp[i].getQtdElementos(); ++j) {
-    //         std::cout << sp[i].getElemento(j) << " ";
-    //     }
-    //     std::cout << "\n";
-    // }
-    // for (int i = 0; i < int(s.size()); ++i) {
-    //     std::cout << " elementos grupo s " << i << ": ";
-    //     for (int j = 0; j < s[i].getQtdElementos(); ++j) {
-    //         std::cout << s[i].getElemento(j) << " ";
-    //     }
-    //     std::cout << "\n";
-    // }
-
+        // double somatorioS = 0;
+        // for (int i = 0; i < grafo->getQtdGrupos(); ++i) {
+        //     somatorioS += s[i].getSomatorioDistancias();
+        // }
+        // std::cout << "\nsomatorioS: " << somatorioS << std::endl;
         sp = s;
     }
     return sp;
