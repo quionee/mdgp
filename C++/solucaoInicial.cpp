@@ -49,6 +49,8 @@ Grafo* SolucaoInicial::leArquivo(std::string nomeArquivo) {
                 >> arestasValor[i];
     }
     
+    arquivo.close();
+
     Grafo* grafo = new Grafo(qtdElementos, qtdGrupos, qtdArestas, tipoDivisao, limites, arestasElementos, arestasValor);
     
     return grafo;

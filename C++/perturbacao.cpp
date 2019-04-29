@@ -12,7 +12,7 @@ Perturbacao::~Perturbacao() {
 }
 
 // método de perturbação fraca com uma busca local apenas.
-std::vector<Grupo> Perturbacao::perturbacaoFracaUmaBuscaLocal(Grafo* grafo, std::vector<Grupo> s0, int qtdIteracoes, BuscaLocal &buscaLocal) {
+std::vector<Grupo> Perturbacao::perturbacaoFracaUmaBuscaLocal(Grafo* grafo, std::vector<Grupo> &s0, int qtdIteracoes, BuscaLocal &buscaLocal) {
     std::vector<Grupo> sp = s0;
     std::vector<Grupo> s;
     std::vector<Grupo> sLinha;
@@ -43,7 +43,7 @@ std::vector<Grupo> Perturbacao::perturbacaoFracaUmaBuscaLocal(Grafo* grafo, std:
 }
 
 // método de perturbação forte com uma busca local apenas.
-std::vector<Grupo> Perturbacao::perturbacaoForteUmaBuscaLocal(Grafo* grafo, std::vector<Grupo> s0, int qtdIteracoes, BuscaLocal &buscaLocal) {
+std::vector<Grupo> Perturbacao::perturbacaoForteUmaBuscaLocal(Grafo* grafo, std::vector<Grupo> &s0, int qtdIteracoes, BuscaLocal &buscaLocal) {
     std::vector<Grupo> sp = s0;
     std::vector<Grupo> s;
 
@@ -108,14 +108,6 @@ std::vector<Grupo> Perturbacao::perturbacaoForte(Grafo* grafo, std::vector<Grupo
     
     std::vector<Grupo> sp = s0;
     std::vector<Grupo> s;
-
-    // for (int i = 0; i < int(s0.size()); ++i) {
-    //     std::cout << "elementos grupo s0 " << i << ": ";
-    //     for(int j = 0; j < s0[i].getQtdElementos(); ++j) {
-    //         std::cout << s0[i].getElemento(j) << " ";
-    //     }
-    //     std::cout << "\n";
-    // }
 
     for (int i = 0; i < qtdIteracoes; ++i) {
         int numeroAleatorio = rand() % 3;

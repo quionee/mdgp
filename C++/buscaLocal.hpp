@@ -14,11 +14,11 @@ class BuscaLocal {
         std::vector<std::vector<double> > matrizGama;
         double** matriz;
 
-        void atualizaMatrizGamaInsercao(int grupoI, int grupoJ, int elementoV);
-        void atualizaMatrizGamaSwap(int grupoI, int grupoJ, int elementoV, int elementoU);
-        void swapAux(int elementoV, int elementoU);
-        void atualizaMatrizGamaSwapEmCadeia(int grupoV, int grupoU, int grupoW, int elementoV, int elementoU, int elementoW);
-        void swapEmCadeiaAux(int elementoV, int elementoU, int elementoW);
+        void atualizaMatrizGamaInsercao(int &grupoI, int &grupoJ, int &elementoV);
+        void atualizaMatrizGamaSwap(int &grupoI, int &grupoJ, int &elementoV, int &elementoU);
+        void swapAux(int &elementoV, int &elementoU);
+        void atualizaMatrizGamaSwapEmCadeia(int &grupoV, int &grupoU, int &grupoW, int &elementoV, int &elementoU, int &elementoW);
+        void swapEmCadeiaAux(int &elementoV, int &elementoU, int &elementoW);
     public:
         BuscaLocal(Grafo* grafo);
         ~BuscaLocal();

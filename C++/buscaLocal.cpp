@@ -106,9 +106,9 @@ std::vector<Grupo> BuscaLocal::buscaLocal(Grafo* grafo, std::vector<Grupo> soluc
     bool melhorou = true;
     while (melhorou) {
         melhorou = false;
-        insercaoAlgoritmo(solucaoFinal, melhorou);
+        // insercaoAlgoritmo(solucaoFinal, melhorou);
         swapAlgoritmo(melhorou);
-        swapEmCadeiaAlgoritmo(melhorou);
+        // swapEmCadeiaAlgoritmo(melhorou);
     }
     atualizaSolucao(grafo, solucaoFinal);
     return solucaoFinal;
@@ -163,7 +163,7 @@ void BuscaLocal::insercaoSemValorDoMovimentoAlgoritmo(std::vector<Grupo> grupos)
     }
 }
 
-void BuscaLocal::atualizaMatrizGamaInsercao(int grupoV, int grupoU, int elementoV) {
+void BuscaLocal::atualizaMatrizGamaInsercao(int &grupoV, int &grupoU, int &elementoV) {
     for (int u = 0; u < int(matrizGama.size()); ++u) {
         if (u != elementoV) {
             matrizGama[u][grupoV] = matrizGama[u][grupoV] - matriz[elementoV][u];
@@ -236,12 +236,12 @@ void BuscaLocal::swapSemValorDoMovimentoAlgoritmo() {
     }
 }
 
-void BuscaLocal::atualizaMatrizGamaSwap(int grupoV, int grupoU, int elementoV, int elementoU) {
+void BuscaLocal::atualizaMatrizGamaSwap(int &grupoV, int &grupoU, int &elementoV, int &elementoU) {
     atualizaMatrizGamaInsercao(grupoV, grupoU, elementoV);
     atualizaMatrizGamaInsercao(grupoU, grupoV, elementoU);
 }
 
-void BuscaLocal::swapAux(int elementoV, int elementoU) {
+void BuscaLocal::swapAux(int &elementoV, int &elementoU) {
     int aux = vetorY[elementoV];
     vetorY[elementoV] = vetorY[elementoU];
     vetorY[elementoU] = aux;
@@ -297,13 +297,13 @@ void BuscaLocal::swapEmCadeiaSemValorDoMovimentoAlgoritmo() {
     }
 }
 
-void BuscaLocal::atualizaMatrizGamaSwapEmCadeia(int grupoV, int grupoU, int grupoW, int elementoV, int elementoU, int elementoW) {
+void BuscaLocal::atualizaMatrizGamaSwapEmCadeia(int &grupoV, int &grupoU, int &grupoW, int &elementoV, int &elementoU, int &elementoW) {
     atualizaMatrizGamaInsercao(grupoV, grupoU, elementoV);
     atualizaMatrizGamaInsercao(grupoU, grupoW, elementoU);
     atualizaMatrizGamaInsercao(grupoW, grupoV, elementoW);
 }
 
-void BuscaLocal::swapEmCadeiaAux(int elementoV, int elementoU, int elementoW) {
+void BuscaLocal::swapEmCadeiaAux(int &elementoV, int &elementoU, int &elementoW) {
     int aux = vetorY[elementoV];
     vetorY[elementoV] = vetorY[elementoU];
     vetorY[elementoU] = vetorY[elementoW];

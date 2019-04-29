@@ -200,7 +200,7 @@ void MetodoWJ::limiteSuperior(Grafo* grafo, std::vector<Grupo> &grupos, std::vec
     }
 }
 
-void MetodoWJ::atualizaGrupo(Grupo& grupo, double** matriz, int elemento) {
+void MetodoWJ::atualizaGrupo(Grupo& grupo, double** matriz, int &elemento) {
     grupo.setElementos(elemento);
     grupo.setQtdElementos();
     
@@ -211,7 +211,7 @@ void MetodoWJ::atualizaGrupo(Grupo& grupo, double** matriz, int elemento) {
     }
 }
 
-void MetodoWJ::atualizaGrafo(Grafo* grafo, int elemento, std::vector<int> &elementosSemGrupo) {
+void MetodoWJ::atualizaGrafo(Grafo* grafo, int &elemento, std::vector<int> &elementosSemGrupo) {
     grafo->setInseridosUm(elemento);
     grafo->setElementosSemGrupoRemove(elementosSemGrupo, elemento);
 }

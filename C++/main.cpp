@@ -14,39 +14,40 @@
 
 using namespace std;
 
-void imprimeInformacoesDeUmGrupo(vector<Grupo> solucao, int i) {
-    cout << "\nGRUPO " << (i + 1)
-         << "\nlimiteInferior: " << solucao[i].getLimiteInferior()
-         << "\nlimiteSuperior: " << solucao[i].getLimiteSuperior()
-         << "\nqtdElementos: " << solucao[i].getQtdElementos()
-         << "\nelementos: ";
-         
-    for (unsigned int j = 0; j < solucao[i].getElementos().size(); ++j) {
-        cout << solucao[i].getElemento(j) << " ";
+void imprimeInformacoesDeUmGrupo(vector<Grupo> &solucao) {
+    for (unsigned int i = 0; i < solucao.size(); ++i) {
+        cout << "\nGRUPO " << (i + 1)
+            << "\nlimiteInferior: " << solucao[i].getLimiteInferior()
+            << "\nlimiteSuperior: " << solucao[i].getLimiteSuperior()
+            << "\nqtdElementos: " << solucao[i].getQtdElementos()
+            << "\nelementos: ";
+            
+        for (unsigned int j = 0; j < solucao[i].getElementos().size(); ++j) {
+            cout << solucao[i].getElemento(j) << " ";
+        }
+        
+        cout << "\narestas: ";
+        vector<vector<int> >  arestasElementos = solucao[i].getArestasElementos();
+        vector<double> arestasValor = solucao[i].getArestasValor();
+        for (unsigned int j = 0; j < arestasElementos.size(); ++j) {
+            cout << arestasElementos[j][0] << ", "
+                << arestasElementos[j][1] << ", "
+                << arestasValor[j] << "; ";
+        }
+        cout << "\nsomatorioDistancias: " << solucao[i].getSomatorioDistancias() << "\n";
     }
-    
-    cout << "\narestas: ";
-    vector<vector<int> >  arestasElementos = solucao[i].getArestasElementos();
-    vector<double> arestasValor = solucao[i].getArestasValor();
-    for (unsigned int j = 0; j < arestasElementos.size(); ++j) {
-        cout << arestasElementos[j][0] << ", "
-             << arestasElementos[j][1] << ", "
-             << arestasValor[j] << "; ";
-    }
-    cout << "\nsomatorioDistancias: " << solucao[i].getSomatorioDistancias() << "\n";
 }
 
-void realizaSomatorioDaSolucao(double &somatorioTotal, vector<Grupo> solucao) {
+void realizaSomatorioDaSolucao(double &somatorioTotal, vector<Grupo> &solucao) {
     somatorioTotal = 0;
+    // imprimeInformacoesDeUmGrupo(solucao);
     for (unsigned int i = 0; i  < solucao.size(); ++i) {
-        // para printar todas as informacoes dos solucao, basta descomentar a linha abaixo
-        //~ imprimeInformacoesDeUmGrupo(solucao, i);
         somatorioTotal += solucao[i].getSomatorioDistancias();
     }
 }
 
-vector<Grupo> buscaMaxima(Grafo* grafo, vector<Grupo> s0, int alfa) {
-    int qtdIteracoes = 1;
+vector<Grupo> buscaMaxima(Grafo* grafo, vector<Grupo> &s0, int &alfa) {
+    int qtdIteracoes = 3;
     vector<Grupo> s = s0;
     BuscaLocal buscaLocal(grafo);
 
@@ -77,17 +78,36 @@ vector<Grupo> buscaMaxima(Grafo* grafo, vector<Grupo> s0, int alfa) {
     return sb;
 }
 
-vector<Grupo> melhoria(Grafo* grafo, vector<Grupo> solucao) {
-    int alfa = 5;
+vector<Grupo> melhoria(Grafo* grafo, vector<Grupo> &solucao, time_t &duracao) {
+    int alfa = 3;
+    if ((grafo->getQtdElementos() <= 400) or ((grafo->getQtdElementos() / grafo->getQtdGrupos()) <= 10)) {
+        alfa = 5;
+    }
 
     Perturbacao perturbacao;
     BuscaLocal buscaLocal(grafo);
-    int qtdIteracoes = 2 * (grafo->getQtdElementos() / grafo->getQtdGrupos());
+    int qtdIteracoes = (grafo->getQtdElementos() / grafo->getQtdGrupos());
 
     vector<Grupo> solucaoAux = solucao;
 
-    int tempo = 0;
-    while (tempo < 3) {
+    // tempo limite de execução em segundos
+    time_t tempo;
+    if (grafo->getQtdElementos() == 120) {
+        tempo = 3;
+    }
+    else if (grafo->getQtdElementos() == 240) {
+        tempo = 20;
+    }
+    else if (grafo->getQtdElementos() == 480) {
+        tempo = 120;
+    }
+    else {
+        tempo = 600;
+    }
+
+    time_t tempoInicial = time(NULL);
+    time_t tempoFinal;
+    do {
         solucao = buscaMaxima(grafo, solucao, alfa);
 
         double somatorioS = 0, somatorioSAux = 0;
@@ -100,78 +120,42 @@ vector<Grupo> melhoria(Grafo* grafo, vector<Grupo> solucao) {
             solucaoAux = solucao;
         }
         solucao = perturbacao.perturbacaoForte(grafo, solucao, qtdIteracoes, buscaLocal);
-        tempo += 1;
-    }
+
+        tempoFinal = time(NULL);
+    } while (difftime(tempoFinal, tempoInicial) <= tempo);
+
+    duracao = difftime(tempoFinal, tempoInicial);
     return solucaoAux;
-
-    // double melhorResultado = 0;
-    // for (int i = 0; i < 5; ++i) {
-    //     cout << "\n\n---------- Iteração " << i << " ----------\n\n";
-    //     solucao = buscaMaxima(grafo, solucao, alfa);
-    //     double somatorioTotal = 0;
-    //     realizaSomatorioDaSolucao(somatorioTotal, solucao);
-    //     cout << "\n     Somatorio apos busca maxima: " << somatorioTotal;
-
-    //     if (somatorioTotal > melhorResultado) {
-    //         melhorResultado = somatorioTotal;
-    //     }
-
-    //     // cout << "\n\nForca da perturbacao forte: ";
-    //     int qtdIteracoes = 2 * (grafo->getQtdElementos() / grafo->getQtdGrupos());
-    //     // cin >> qtdIteracoes;
-    //     Perturbacao perturbacao;
-    //     BuscaLocal buscaLocal(grafo);
-    //     solucao = perturbacao.perturbacaoForte(grafo, solucao, qtdIteracoes, buscaLocal);
-    //     somatorioTotal = 0;
-    //     realizaSomatorioDaSolucao(somatorioTotal, solucao);
-    //     cout << "\nSomatorio apos perturbacao forte: " << somatorioTotal << "\n";
-
-    //     if (somatorioTotal > melhorResultado) {
-    //         melhorResultado = somatorioTotal;
-    //     }
-
-    //     // cout << "\n\nAlfa: ";
-    //     // cin >> alfa;
-    //     solucao = buscaMaxima(grafo, solucao, alfa);
-    //     somatorioTotal = 0;
-    //     realizaSomatorioDaSolucao(somatorioTotal, solucao);
-    //     cout << "     Somatorio apos busca maxima: " << somatorioTotal;
-
-    //     if (somatorioTotal > melhorResultado) {
-    //         melhorResultado = somatorioTotal;
-    //     }
-    // }
-    // cout << "\n\nMelhor resultado: " << melhorResultado << "\n\n";
-    // return solucao;
 }
 
-void solucaoInicialLH(string nomeArquivo) {
+double solucaoInicialLH(string &nomeArquivo, time_t &duracao) {
     cout << "\n\n---------- Metodo LH: ----------\n\n";
     
-    int qtdSolucoesFactiveis = 2;
-    // cout << "Quantidade de solucoes factiveis a serem testadas: ";
-    // cin >> qtdSolucoesFactiveis;
+    int qtdSolucoesFactiveis = 10;
+
     MetodoLH* solucaoInicial = new MetodoLH(qtdSolucoesFactiveis);
     
     Grafo* grafo = solucaoInicial->leArquivo(nomeArquivo);
     
     vector<Grupo> solucao = solucaoInicial->gerarSolucao(grafo);
     
+    // imprimeInformacoesDeUmGrupo(solucao);
+
     double somatorioTotal = 0;
     realizaSomatorioDaSolucao(somatorioTotal, solucao);
     cout << "\nSolucao inicial: " << somatorioTotal;
 
-    solucao = melhoria(grafo, solucao);
+    solucao = melhoria(grafo, solucao, duracao);
     somatorioTotal = 0;
     realizaSomatorioDaSolucao(somatorioTotal, solucao);
     cout << "\n\nSomatorio final: " << somatorioTotal << "\n\n";
 
-    // for(int i = 0; i < grafo->getQtdGrupos(); ++i) {
-    //     imprimeInformacoesDeUmGrupo(solucao, i);
-    // }
+    // imprimeInformacoesDeUmGrupo(solucao);
+
+    return somatorioTotal;
 }
 
-void solucaoInicialGC(string nomeArquivo) {
+double solucaoInicialGC(string &nomeArquivo, time_t &duracao) {
     cout << "\n\n---------- Metodo GC: ----------\n\n";
 
     MetodoGC* solucaoInicial = new MetodoGC();
@@ -179,26 +163,24 @@ void solucaoInicialGC(string nomeArquivo) {
     Grafo* grafo = solucaoInicial->leArquivo(nomeArquivo);
     
     vector<Grupo> solucao = solucaoInicial->gerarSolucao(grafo);
-    
-    // for(int i = 0; i < grafo->getQtdGrupos(); ++i) {
-    //     imprimeInformacoesDeUmGrupo(solucao, i);
-    // }
+
+    // imprimeInformacoesDeUmGrupo(solucao);
 
     double somatorioTotal = 0;
     realizaSomatorioDaSolucao(somatorioTotal, solucao);
     cout << "\nSolucao inicial: " << somatorioTotal;
 
-    solucao = melhoria(grafo, solucao);
+    solucao = melhoria(grafo, solucao, duracao);
     somatorioTotal = 0;
     realizaSomatorioDaSolucao(somatorioTotal, solucao);
     cout << "\n\nSomatorio final: " << somatorioTotal << "\n\n";
 
-    // for(int i = 0; i < grafo->getQtdGrupos(); ++i) {
-    //     imprimeInformacoesDeUmGrupo(solucao, i);
-    // }
+    // imprimeInformacoesDeUmGrupo(solucao);
+
+    return somatorioTotal;
 }
 
-void solucaoInicialWJ(string nomeArquivo) {
+double solucaoInicialWJ(string &nomeArquivo, time_t &duracao) {
     cout << "\n\n---------- Metodo WJ: ----------\n\n";
 
     MetodoWJ* solucaoInicial = new MetodoWJ();
@@ -211,30 +193,54 @@ void solucaoInicialWJ(string nomeArquivo) {
     realizaSomatorioDaSolucao(somatorioTotal, solucao);
     cout << "\nSolucao inicial: " << somatorioTotal;
     
-    solucao = melhoria(grafo, solucao);
+    solucao = melhoria(grafo, solucao, duracao);
     somatorioTotal = 0;
     realizaSomatorioDaSolucao(somatorioTotal, solucao);
     cout << "\n\nSomatorio final: " << somatorioTotal << "\n\n";
 
-    // for(int i = 0; i < grafo->getQtdGrupos(); ++i) {
-    //     imprimeInformacoesDeUmGrupo(solucao, i);
-    // }
+    // imprimeInformacoesDeUmGrupo(solucao);
+
+    return somatorioTotal;
+}
+
+void executa(string &nomeArquivo, fstream &arquivoEscrita) {
+    time_t duracaoLH = 0, duracaoGC = 0, duracaoWJ = 0;
+    double solucaoLH = solucaoInicialLH(nomeArquivo, duracaoLH);
+    double solucaoGC = solucaoInicialGC(nomeArquivo, duracaoGC);
+    double solucaoWJ = solucaoInicialWJ(nomeArquivo, duracaoWJ);
+
+    double media = (solucaoLH + solucaoGC + solucaoWJ) / 3;
+
+    arquivoEscrita << "\n     Arquivo " << nomeArquivo << "\n"
+                   << "\nsolucao LH: " << solucaoLH << "     duracao LH: " << duracaoLH
+                   << "\nsolucao GC: " << solucaoGC << "     duracao GC: " << duracaoGC
+                   << "\nsolucao WJ: " << solucaoWJ << "     duracao WJ: " << duracaoWJ
+                   << "\n\nMedia: " << media << "\n\n";
+
+    cout << "\n     Arquivo " << nomeArquivo << "\n"
+         << "\nsolucao LH: " << solucaoLH << "     duracao LH: " << duracaoLH
+         << "\nsolucao GC: " << solucaoGC << "     duracao GC: " << duracaoGC
+         << "\nsolucao WJ: " << solucaoWJ << "     duracao WJ: " << duracaoWJ
+         << "\n\nMedia: " << media << "\n\n";
 }
 
 int main() {
-    // string nomeArquivo;
-    // cout << "Nome do arquivo: ";
-    // cin >> nomeArquivo;
+    fstream arquivoEscrita;
+    arquivoEscrita.open("arquivo1.txt");
+    for(int i = 1; i <= 8; ++i) {
+        // conjunto INT
+        string nomeArquivoLeitura = (to_string(i) + "_int.txt");
+        executa(nomeArquivoLeitura, arquivoEscrita);
 
-    // for (int j = 0; j < 5; ++j) {
-        // for(int i = 9; i <= 16; ++i) {
-           string nomeArquivo = (to_string(13) + "r");
-           cout << "\n---- arquivo " << nomeArquivo << " ----";
-           solucaoInicialLH(nomeArquivo);
-           solucaoInicialGC(nomeArquivo);
-           solucaoInicialWJ(nomeArquivo);
-        // }
-    // }
+        // conjunto REAL
+        nomeArquivoLeitura = (to_string(i) + "_real.txt");
+        executa(nomeArquivoLeitura, arquivoEscrita);
+
+        // conjunto GEO
+        nomeArquivoLeitura = (to_string(i) + "_geo.txt");
+        executa(nomeArquivoLeitura, arquivoEscrita);
+    }
+    arquivoEscrita.close();
 
     return 0;
 }

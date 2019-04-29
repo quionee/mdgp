@@ -57,7 +57,7 @@ std::vector<int> MetodoGC::divisaoInicial(Grafo* grafo) {
 }
 
 // método que cria os "qtdGrupos" grupos com os elementos aleatórios selecionados no método "divisaoInicial".
-std::vector<Grupo> MetodoGC::criaGrupos(Grafo* grafo, std::vector<int> elementosAleatorios) {
+std::vector<Grupo> MetodoGC::criaGrupos(Grafo* grafo, std::vector<int> &elementosAleatorios) {
     // cria um vetor de grupos.
     std::vector<Grupo> grupos;
     int** limites = grafo->getLimites();
@@ -71,7 +71,7 @@ std::vector<Grupo> MetodoGC::criaGrupos(Grafo* grafo, std::vector<int> elementos
 }
 
 // método que atualiza os dados do grupo passado por parâmetro quando um elemento é adicionado a ele.
-void MetodoGC::atualizaGrupo(Grupo &grupo, int elemento, double** matriz) {
+void MetodoGC::atualizaGrupo(Grupo &grupo, int &elemento, double** matriz) {
     grupo.setQtdElementos();
     grupo.setElementos(elemento);
     
@@ -83,7 +83,7 @@ void MetodoGC::atualizaGrupo(Grupo &grupo, int elemento, double** matriz) {
 }
 
 // método que atualiza os dados do grafo sobre os elementos ainda sem grupo.
-void MetodoGC::atualizaGrafo(Grafo* grafo, int elemento, std::vector<int> &elementosSemGrupo) {
+void MetodoGC::atualizaGrafo(Grafo* grafo, int &elemento, std::vector<int> &elementosSemGrupo) {
     grafo->setInseridosUm(elemento);
     grafo->setElementosSemGrupoRemove(elementosSemGrupo, elemento);
 }

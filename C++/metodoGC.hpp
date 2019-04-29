@@ -13,11 +13,10 @@ class MetodoGC : public SolucaoInicial {
         MetodoGC();
         ~MetodoGC();
         std::vector<Grupo> gerarSolucao(Grafo* grafo);
-        void atualizaGrupo(Grupo &grupo, int elemento, double** matriz);
-        void atualizaGrafo(Grafo* grafo, int elemento, std::vector<int> &elementosSemGrupo);
-        bool decideQualGrupoMaximizar(int elemento, double &somatorioGrupoAtual, int &i, std::vector<Grupo> grupos, int limite, double** matriz, int &grupoMaximizado, double &maiorSomatorio);
+        void atualizaGrupo(Grupo &grupo, int &elemento, double** matriz);
+        void atualizaGrafo(Grafo* grafo, int &elemento, std::vector<int> &elementosSemGrupo);
         std::vector<int> divisaoInicial(Grafo* grafo);
-        std::vector<Grupo> criaGrupos(Grafo* grafo, std::vector<int> elementosAleatorios);
+        std::vector<Grupo> criaGrupos(Grafo* grafo, std::vector<int> &elementosAleatorios);
         void limiteInferior(Grafo* grafo, std::vector<Grupo> &grupos, double** matriz);
         void limiteSuperior(Grafo* grafo, std::vector<Grupo> &grupos, double** matriz);
 };
