@@ -110,22 +110,18 @@ std::vector<Grupo> Perturbacao::perturbacaoForte(Grafo* grafo, std::vector<Grupo
     std::vector<Grupo> s;
 
     for (int i = 0; i < qtdIteracoes; ++i) {
-        int numeroAleatorio = rand() % 3;
-        if (numeroAleatorio == 0) {
-            s = buscaLocal.insercaoSemValorDoMovimento(grafo, sp);
-        }
-        else if (numeroAleatorio == 1) {
-            s = buscaLocal.swapSemValorDoMovimento(grafo, sp);
-        }
-        else {
-            s = buscaLocal.swapEmCadeia(grafo, sp);
-        }
-
-        // double somatorioS = 0;
-        // for (int i = 0; i < grafo->getQtdGrupos(); ++i) {
-        //     somatorioS += s[i].getSomatorioDistancias();
+        s = buscaLocal.insercaoSemValorDoMovimento(grafo, sp);
+        // int numeroAleatorio = rand() % 3;
+        // if (numeroAleatorio == 0) {
+        //     s = buscaLocal.insercaoSemValorDoMovimento(grafo, sp);
         // }
-        // std::cout << "\nsomatorioS: " << somatorioS << std::endl;
+        // else if (numeroAleatorio == 1) {
+        //     s = buscaLocal.swapSemValorDoMovimento(grafo, sp);
+        // }
+        // else {
+        //     s = buscaLocal.swapEmCadeia(grafo, sp);
+        // }
+
         sp = s;
     }
     return sp;
