@@ -95,9 +95,34 @@ void BuscaLocal::criaVariaveis(Grafo* grafo, std::vector<Grupo> &solucao) {
     //     }
     //     cout << endl;
     // }
-    
 
+}
 
+void BuscaLocal::arrumaGrupos(int &grupo1, int &grupo2, int &grupo3) {
+    if (grupo1 <= 1) {
+        if (grupo1 == grupo3) {
+            ++grupo2;
+            grupo3 += 2;
+        }
+        else if (grupo3 == (grupo1 + 1)) {
+            grupo2 += 2;
+        }
+        else {
+            ++grupo2;
+        }
+    }
+    else {
+        if (grupo1 == grupo3) {
+            --grupo2;
+            grupo3 -= 2;
+        }
+        else if (grupo3 == (grupo1 - 1)) {
+            grupo2 -= 2;
+        }
+        else {
+            --grupo2;
+        }
+    }
 }
 
 std::vector<Grupo> BuscaLocal::buscaLocal(Grafo* grafo, std::vector<Grupo> solucao) {
@@ -107,8 +132,8 @@ std::vector<Grupo> BuscaLocal::buscaLocal(Grafo* grafo, std::vector<Grupo> soluc
     while (melhorou) {
         melhorou = false;
         insercaoAlgoritmo(solucaoFinal, melhorou);
-        // swapAlgoritmo(melhorou);
-        // swapEmCadeiaAlgoritmo(melhorou);
+        swapAlgoritmo(melhorou);
+        swapEmCadeiaAlgoritmo(melhorou);
     }
     atualizaSolucao(grafo, solucaoFinal);
     return solucaoFinal;
@@ -124,8 +149,9 @@ std::vector<Grupo> BuscaLocal::insercao(Grafo* grafo, std::vector<Grupo> solucao
 }
 
 void BuscaLocal::insercaoAlgoritmo(std::vector<Grupo> grupos, bool &melhorou) {
+    bool reinicia = false;
     for (int v = 0; v < int(vetorY.size()); ++v) {
-        for (int g = 0; g < int(vetorZ.size()); ++g) {
+        for (int g = 0; (g < int(vetorZ.size())) and !reinicia; ++g) {
             if ((vetorY[v] != g) and (vetorZ[vetorY[v]] > grupos[vetorY[v]].getLimiteInferior()) and (vetorZ[g] < grupos[g].getLimiteSuperior())) {
                 double deltaF = matrizGama[v][g] - matrizGama[v][vetorY[v]];
                 if (deltaF > 0) {
@@ -136,8 +162,13 @@ void BuscaLocal::insercaoAlgoritmo(std::vector<Grupo> grupos, bool &melhorou) {
                     vetorY[v] = g;
                     
                     melhorou = true;
+                    reinicia = true;
                 }
             }
+        }
+        if (reinicia) {
+            v = 0;
+            reinicia = false;
         }
     }
 }
@@ -151,14 +182,32 @@ std::vector<Grupo> BuscaLocal::insercaoSemValorDoMovimento(Grafo* grafo, std::ve
 }
 
 void BuscaLocal::insercaoSemValorDoMovimentoAlgoritmo(std::vector<Grupo> grupos) {
+    int grupo1 = rand() % int(vetorZ.size());
+    int grupo2 = rand() % int(vetorZ.size());
+
+    if (grupo2 == grupo1) {
+        if (grupo2 == 0) {
+            ++grupo2;
+        }
+        else {
+            --grupo2;
+        }
+    }
+
     for (int v = 0; v < int(vetorY.size()); ++v) {
-        for (int g = 0; g < int(vetorZ.size()); ++g) {
-            if ((vetorY[v] != g) and (vetorZ[vetorY[v]] > grupos[vetorY[v]].getLimiteInferior()) and (vetorZ[g] < grupos[g].getLimiteSuperior())) {
-                atualizaMatrizGamaInsercao(vetorY[v], g, v);
-                vetorZ[vetorY[v]] = vetorZ[vetorY[v]] - 1;
-                vetorZ[g] = vetorZ[g] + 1;
-                vetorY[v] = g;
-            }
+        if ((vetorY[v] != grupo1) and (vetorZ[vetorY[v]] > grupos[vetorY[v]].getLimiteInferior())
+            and (vetorZ[grupo1] < grupos[grupo1].getLimiteSuperior())) {
+            atualizaMatrizGamaInsercao(vetorY[v], grupo1, v);
+            vetorZ[vetorY[v]] = vetorZ[vetorY[v]] - 1;
+            vetorZ[grupo1] = vetorZ[grupo1] + 1;
+            vetorY[v] = grupo1;
+        }
+        if ((vetorY[v] != grupo2) and (vetorZ[vetorY[v]] > grupos[vetorY[v]].getLimiteInferior())
+            and (vetorZ[grupo2] < grupos[grupo2].getLimiteSuperior())) {
+            atualizaMatrizGamaInsercao(vetorY[v], grupo2, v);
+            vetorZ[vetorY[v]] = vetorZ[vetorY[v]] - 1;
+            vetorZ[grupo2] = vetorZ[grupo2] + 1;
+            vetorY[v] = grupo2;
         }
     }
 }
@@ -182,16 +231,22 @@ std::vector<Grupo> BuscaLocal::swap(Grafo* grafo, std::vector<Grupo> solucao) {
 }
 
 void BuscaLocal::swapAlgoritmo(bool &melhorou) {
+    bool reinicia = false;
     for (int v = 0; v < (int(vetorY.size()) - 1); ++v) {
-        for (int u = v + 1; u < int(vetorY.size()); ++u) {
+        for (int u = v + 1; (u < int(vetorY.size())) and !reinicia; ++u) {
             if (vetorY[v] != vetorY[u]) {
                 double deltaF = (matrizGama[v][vetorY[u]] - matrizGama[v][vetorY[v]]) + (matrizGama[u][vetorY[v]] - matrizGama[u][vetorY[u]]) - (2 * matriz[v][u]);
                 if (deltaF > 0) {
                     atualizaMatrizGamaSwap(vetorY[v], vetorY[u], v, u);
                     swapAux(v, u);
                     melhorou = true;
+                    reinicia = true;
                 }
             }
+        }
+        if (reinicia) {
+            v = 0;
+            reinicia = false;
         }
     }
 }
@@ -205,14 +260,39 @@ std::vector<Grupo> BuscaLocal::swapSemValorDoMovimento(Grafo* grafo, std::vector
 }
 
 void BuscaLocal::swapSemValorDoMovimentoAlgoritmo() {
-    for (int v = 0; v < (int(vetorY.size()) - 1); ++v) {
-        for (int u = v + 1; u < int(vetorY.size()); ++u) {
-            if (vetorY[v] != vetorY[u]) {
-                atualizaMatrizGamaSwap(vetorY[v], vetorY[u], v, u);
-                swapAux(v, u);
-            }
+    int grupo1 = rand() % int(vetorZ.size());
+    int grupo2 = rand() % int(vetorZ.size());
+
+    if (grupo1 == grupo2) {
+        if (grupo1 == 0) {
+            ++grupo2;
+        }
+        else {
+            --grupo2;
         }
     }
+
+    std::vector<int> vetorElementosGrupo1;
+    std::vector<int> vetorElementosGrupo2;
+
+    for (int i = 0; i < int(vetorY.size()); ++i) {
+        if (vetorY[i] == grupo1) {
+            vetorElementosGrupo1.push_back(i);
+        }
+        else if (vetorY[i] == grupo2) {
+            vetorElementosGrupo2.push_back(i);
+        }
+    }
+
+    for (int v = 0; v < int(vetorElementosGrupo1.size()) - 1; ++v) {
+        for (int u = v + 1; u < int(vetorElementosGrupo2.size()); ++u) {
+            atualizaMatrizGamaSwap(grupo1, grupo2, v, u);
+            swapAux(v, u);
+        }
+    }
+
+    vetorElementosGrupo1.clear();
+    vetorElementosGrupo2.clear();
 }
 
 void BuscaLocal::atualizaMatrizGamaSwap(int &grupoV, int &grupoU, int &elementoV, int &elementoU) {
@@ -236,9 +316,10 @@ std::vector<Grupo> BuscaLocal::swapEmCadeia(Grafo* grafo, std::vector<Grupo> sol
 }
 
 void BuscaLocal::swapEmCadeiaAlgoritmo(bool &melhorou) {
+    bool reinicia = false;
     for (int v = 0; v < (int(vetorY.size()) - 2); ++v) {
-        for (int u = v + 1; u < (int(vetorY.size()) - 1); ++u) {
-            for (int w = u + 1; w < int(vetorY.size()); ++w) {
+        for (int u = v + 1; (u < (int(vetorY.size()) - 1)) and !reinicia; ++u) {
+            for (int w = u + 1; (w < int(vetorY.size())) and !reinicia; ++w) {
                 if ((vetorY[v] != vetorY[u]) and (vetorY[u] != vetorY[w]) and (vetorY[w] != vetorY[v])) {
                     double deltaF = (((matrizGama[v][vetorY[u]] - matrizGama[v][vetorY[v]])
                                     + (matrizGama[u][vetorY[w]] - matrizGama[u][vetorY[u]])
@@ -248,9 +329,14 @@ void BuscaLocal::swapEmCadeiaAlgoritmo(bool &melhorou) {
                         atualizaMatrizGamaSwapEmCadeia(vetorY[v], vetorY[u], vetorY[w], v, u, w);
                         swapEmCadeiaAux(v, u, w);
                         melhorou = true;
+                        reinicia = true;
                     }
                 }
             }
+        }
+        if (reinicia) {
+            v = 0;
+            reinicia = false;
         }
     }
 }
@@ -264,16 +350,48 @@ std::vector<Grupo> BuscaLocal::swapEmCadeiaSemValorDoMovimento(Grafo* grafo, std
 }
 
 void BuscaLocal::swapEmCadeiaSemValorDoMovimentoAlgoritmo() {
-    for (int v = 0; v < (int(vetorY.size()) - 2); ++v) {
-        for (int u = v + 1; u < (int(vetorY.size()) - 1); ++u) {
-            for (int w = u + 1; w < int(vetorY.size()); ++w) {
-                if ((vetorY[v] != vetorY[u]) and (vetorY[u] != vetorY[w]) and (vetorY[w] != vetorY[v])) {
-                    atualizaMatrizGamaSwapEmCadeia(vetorY[v], vetorY[u], vetorY[w], v, u, w);
-                    swapEmCadeiaAux(v, u, w);
-                }
+    int grupo1 = rand() % int(vetorZ.size());
+    int grupo2 = rand() % int(vetorZ.size());
+    int grupo3 = rand() % int(vetorZ.size());
+
+    if (grupo1 == grupo2) {
+        arrumaGrupos(grupo1, grupo2, grupo3);
+    }
+    else if (grupo1 == grupo3) {
+        arrumaGrupos(grupo1, grupo3, grupo2);
+    }
+    else if (grupo2 == grupo3) {
+        arrumaGrupos(grupo2, grupo3, grupo1);
+    }
+
+    std::vector<int> vetorElementosGrupo1;
+    std::vector<int> vetorElementosGrupo2;
+    std::vector<int> vetorElementosGrupo3;
+
+    for (int i = 0; i < int(vetorY.size()); ++i) {
+        if (vetorY[i] == grupo1) {
+            vetorElementosGrupo1.push_back(i);
+        }
+        else if (vetorY[i] == grupo2) {
+            vetorElementosGrupo2.push_back(i);
+        }
+        else if (vetorY[i] == grupo3) {
+            vetorElementosGrupo3.push_back(i);
+        }
+    }
+
+    for (int v = 0; v < (int(vetorElementosGrupo1.size()) - 2); ++v) {
+        for (int u = v + 1; u < (int(vetorElementosGrupo2.size()) - 1); ++u) {
+            for (int w = u + 1; w < int(vetorElementosGrupo3.size()); ++w) {
+                atualizaMatrizGamaSwapEmCadeia(grupo1, grupo2, grupo3, v, u, w);
+                swapEmCadeiaAux(v, u, w);
             }
         }
     }
+
+    vetorElementosGrupo1.clear();
+    vetorElementosGrupo2.clear();
+    vetorElementosGrupo3.clear();
 }
 
 void BuscaLocal::atualizaMatrizGamaSwapEmCadeia(int &grupoV, int &grupoU, int &grupoW, int &elementoV, int &elementoU, int &elementoW) {

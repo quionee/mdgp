@@ -78,7 +78,7 @@ vector<Grupo> buscaMaxima(Grafo* grafo, vector<Grupo> &s0, int &alfa) {
     return sb;
 }
 
-vector<Grupo> melhoria(Grafo* grafo, vector<Grupo> &solucao, time_t &duracao) {
+vector<Grupo> melhoria(Grafo* grafo, vector<Grupo> &solucao, time_t &duracao, time_t &tempoMelhorSolucao) {
     int alfa = 3;
     if ((grafo->getQtdElementos() <= 400) or ((grafo->getQtdElementos() / grafo->getQtdGrupos()) <= 10)) {
         alfa = 5;
@@ -105,8 +105,10 @@ vector<Grupo> melhoria(Grafo* grafo, vector<Grupo> &solucao, time_t &duracao) {
         tempo = 600;
     }
 
+    // double melhorSolucao = 0;
     time_t tempoInicial = time(NULL);
     time_t tempoFinal;
+    // int contador = 0;
     do {
         solucao = buscaMaxima(grafo, solucao, alfa);
 
@@ -128,7 +130,7 @@ vector<Grupo> melhoria(Grafo* grafo, vector<Grupo> &solucao, time_t &duracao) {
     return solucaoAux;
 }
 
-double solucaoInicialLH(string &nomeArquivo, time_t &duracao) {
+double solucaoInicialLH(string &nomeArquivo, time_t &duracao, time_t &tempoMelhorSolucaoLH) {
     cout << "\n\n---------- Metodo LH: ----------\n\n";
     
     int qtdSolucoesFactiveis = 10;
@@ -145,7 +147,7 @@ double solucaoInicialLH(string &nomeArquivo, time_t &duracao) {
     realizaSomatorioDaSolucao(somatorioTotal, solucao);
     cout << "\nSolucao inicial: " << somatorioTotal;
 
-    solucao = melhoria(grafo, solucao, duracao);
+    solucao = melhoria(grafo, solucao, duracao, tempoMelhorSolucaoLH);
     somatorioTotal = 0;
     realizaSomatorioDaSolucao(somatorioTotal, solucao);
     cout << "\n\nSomatorio final: " << somatorioTotal << "\n\n";
@@ -155,7 +157,7 @@ double solucaoInicialLH(string &nomeArquivo, time_t &duracao) {
     return somatorioTotal;
 }
 
-double solucaoInicialGC(string &nomeArquivo, time_t &duracao) {
+double solucaoInicialGC(string &nomeArquivo, time_t &duracao, time_t &tempoMelhorSolucaoGC) {
     cout << "\n\n---------- Metodo GC: ----------\n\n";
 
     MetodoGC* solucaoInicial = new MetodoGC();
@@ -170,7 +172,7 @@ double solucaoInicialGC(string &nomeArquivo, time_t &duracao) {
     realizaSomatorioDaSolucao(somatorioTotal, solucao);
     cout << "\nSolucao inicial: " << somatorioTotal;
 
-    solucao = melhoria(grafo, solucao, duracao);
+    solucao = melhoria(grafo, solucao, duracao, tempoMelhorSolucaoGC);
     somatorioTotal = 0;
     realizaSomatorioDaSolucao(somatorioTotal, solucao);
     cout << "\n\nSomatorio final: " << somatorioTotal << "\n\n";
@@ -180,7 +182,7 @@ double solucaoInicialGC(string &nomeArquivo, time_t &duracao) {
     return somatorioTotal;
 }
 
-double solucaoInicialWJ(string &nomeArquivo, time_t &duracao) {
+double solucaoInicialWJ(string &nomeArquivo, time_t &duracao, time_t &tempoMelhorSolucaoWJ) {
     cout << "\n\n---------- Metodo WJ: ----------\n\n";
 
     MetodoWJ* solucaoInicial = new MetodoWJ();
@@ -193,7 +195,7 @@ double solucaoInicialWJ(string &nomeArquivo, time_t &duracao) {
     realizaSomatorioDaSolucao(somatorioTotal, solucao);
     cout << "\nSolucao inicial: " << somatorioTotal;
     
-    solucao = melhoria(grafo, solucao, duracao);
+    solucao = melhoria(grafo, solucao, duracao, tempoMelhorSolucaoWJ);
     somatorioTotal = 0;
     realizaSomatorioDaSolucao(somatorioTotal, solucao);
     cout << "\n\nSomatorio final: " << somatorioTotal << "\n\n";
@@ -204,10 +206,11 @@ double solucaoInicialWJ(string &nomeArquivo, time_t &duracao) {
 }
 
 void executa(string &nomeArquivo, fstream &arquivoEscrita) {
-    time_t duracaoLH = 0, duracaoGC = 0, duracaoWJ = 0;
-    double solucaoLH = solucaoInicialLH(nomeArquivo, duracaoLH);
-    double solucaoGC = solucaoInicialGC(nomeArquivo, duracaoGC);
-    double solucaoWJ = solucaoInicialWJ(nomeArquivo, duracaoWJ);
+    time_t duracaoLH = 0, duracaoGC = 0, duracaoWJ = 0,
+           tempoMelhorSolucaoLH = 0, tempoMelhorSolucaoGC = 0, tempoMelhorSolucaoWJ = 0;
+    double solucaoLH = solucaoInicialLH(nomeArquivo, duracaoLH, tempoMelhorSolucaoLH);
+    double solucaoGC = solucaoInicialGC(nomeArquivo, duracaoGC, tempoMelhorSolucaoGC);
+    double solucaoWJ = solucaoInicialWJ(nomeArquivo, duracaoWJ, tempoMelhorSolucaoWJ);
 
     double media = (solucaoLH + solucaoGC + solucaoWJ) / 3;
 
@@ -227,7 +230,7 @@ void executa(string &nomeArquivo, fstream &arquivoEscrita) {
 int main() {
     fstream arquivoEscrita;
     arquivoEscrita.open("arquivo1.txt");
-    for(int i = 1; i <= 8; ++i) {
+    for(int i = 1; i <= 4; ++i) {
         // conjunto INT
         string nomeArquivoLeitura = (to_string(i) + "_int.txt");
         executa(nomeArquivoLeitura, arquivoEscrita);

@@ -1,0 +1,110 @@
+
+     Arquivo 1_int.txt
+
+solucao LH: 49088     duracao LH: 5
+solucao GC: 48351     duracao GC: 5
+solucao WJ: 49111     duracao WJ: 5
+
+Media: 48850
+
+
+     Arquivo 1_real.txt
+
+solucao LH: 48192.6     duracao LH: 5
+solucao GC: 47503     duracao GC: 5
+solucao WJ: 47468.5     duracao WJ: 5
+
+Media: 47721.4
+
+
+     Arquivo 1_geo.txt
+
+solucao LH: 136621     duracao LH: 4
+solucao GC: 136214     duracao GC: 5
+solucao WJ: 136102     duracao WJ: 5
+
+Media: 136312
+
+
+     Arquivo 2_int.txt
+
+solucao LH: 156709     duracao LH: 51
+solucao GC: 155171     duracao GC: 52
+solucao WJ: 156349     duracao WJ: 54
+
+Media: 156076
+
+
+     Arquivo 2_real.txt
+
+solucao LH: 156693     duracao LH: 52
+solucao GC: 156121     duracao GC: 50
+solucao WJ: 155425     duracao WJ: 53
+
+Media: 156080
+
+
+     Arquivo 2_geo.txt
+
+solucao LH: 340934     duracao LH: 50
+solucao GC: 337731     duracao GC: 52
+solucao WJ: 337880     duracao WJ: 50
+
+Media: 338848
+
+
+     Arquivo 3_int.txt
+
+solucao LH: 380918     duracao LH: 222
+solucao GC: 378354     duracao GC: 220
+solucao WJ: 380117     duracao WJ: 232
+
+Media: 379796
+
+
+     Arquivo 3_real.txt
+
+solucao LH: 376455     duracao LH: 223
+solucao GC: 375183     duracao GC: 238
+solucao WJ: 376517     duracao WJ: 242
+
+Media: 376052
+
+
+     Arquivo 3_geo.txt
+
+solucao LH: 580960     duracao LH: 205
+solucao GC: 577080     duracao GC: 208
+solucao WJ: 581968     duracao WJ: 199
+
+Media: 580003
+
+
+     Arquivo 4_int.txt
+
+solucao LH: 1.21322e+06     duracao LH: 3266
+solucao GC: 1.20896e+06     duracao GC: 3277
+solucao WJ: 1.21374e+06     duracao WJ: 3412
+
+Media: 1.21197e+06
+
+
+     Arquivo 4_real.txt
+
+solucao LH: 1.21413e+06     duracao LH: 3359
+solucao GC: 1.2159e+06     duracao GC: 4081
+solucao WJ: 1.21249e+06     duracao WJ: 3172
+
+Media: 1.21418e+06
+
+
+     Arquivo 4_geo.txt
+
+solucao LH: 3.34494e+06     duracao LH: 3224
+solucao GC: 3.33801e+06     duracao GC: 2936
+solucao WJ: 3.3435e+06     duracao WJ: 3138
+
+Media: 3.34215e+06
+
+06
+
