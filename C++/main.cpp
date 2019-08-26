@@ -214,11 +214,11 @@ void executa(string &nomeArquivo, fstream &arquivoEscrita) {
 
     double media = (solucaoLH + solucaoGC + solucaoWJ) / 3;
 
-    arquivoEscrita << "\n     Arquivo " << nomeArquivo << "\n"
-                   << "\nsolucao LH: " << solucaoLH << "     duracao LH: " << duracaoLH
-                   << "\nsolucao GC: " << solucaoGC << "     duracao GC: " << duracaoGC
-                   << "\nsolucao WJ: " << solucaoWJ << "     duracao WJ: " << duracaoWJ
-                   << "\n\nMedia: " << media << "\n\n";
+    // arquivoEscrita << "\n     Arquivo " << nomeArquivo << "\n"
+    //                << "\nsolucao LH: " << solucaoLH << "     duracao LH: " << duracaoLH
+    //                << "\nsolucao GC: " << solucaoGC << "     duracao GC: " << duracaoGC
+    //                << "\nsolucao WJ: " << solucaoWJ << "     duracao WJ: " << duracaoWJ;
+                //    << "\n\nMedia: " << media << "\n\n";
 
     cout << "\n     Arquivo " << nomeArquivo << "\n"
          << "\nsolucao LH: " << solucaoLH << "     duracao LH: " << duracaoLH
@@ -232,15 +232,15 @@ int main() {
     arquivoEscrita.open("arquivo1.txt");
     for(int i = 1; i <= 4; ++i) {
         // conjunto INT
-        string nomeArquivoLeitura = (to_string(i) + "_int.txt");
+        string nomeArquivoLeitura = ("instancias/" + to_string(i) + "_int.txt");
         executa(nomeArquivoLeitura, arquivoEscrita);
 
         // conjunto REAL
-        nomeArquivoLeitura = (to_string(i) + "_real.txt");
+        nomeArquivoLeitura = ("instancias/" + to_string(i) + "_real.txt");
         executa(nomeArquivoLeitura, arquivoEscrita);
 
         // conjunto GEO
-        nomeArquivoLeitura = (to_string(i) + "_geo.txt");
+        nomeArquivoLeitura = ("instancias/" + to_string(i) + "_geo.txt");
         executa(nomeArquivoLeitura, arquivoEscrita);
     }
     arquivoEscrita.close();

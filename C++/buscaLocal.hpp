@@ -39,8 +39,6 @@ class BuscaLocal {
         void insercaoAlgoritmo(std::vector<Grupo> grupos, bool &melhorou);
         std::vector<Grupo> insercaoSemValorDoMovimento(Grafo* grafo, std::vector<Grupo> solucao);
         void insercaoSemValorDoMovimentoAlgoritmo(std::vector<Grupo> grupos);
-        std::vector<Grupo> insercaoRestrita(Grafo* grafo, std::vector<Grupo> solucao);
-        void insercaoRestritaAlgoritmo(std::vector<Grupo> grupos);
 
         std::vector<Grupo> swap(Grafo* grafo, std::vector<Grupo> solucao);
         void swapAlgoritmo(bool &melhorou);

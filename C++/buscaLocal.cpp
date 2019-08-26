@@ -133,7 +133,7 @@ std::vector<Grupo> BuscaLocal::buscaLocal(Grafo* grafo, std::vector<Grupo> soluc
         melhorou = false;
         insercaoAlgoritmo(solucaoFinal, melhorou);
         swapAlgoritmo(melhorou);
-        swapEmCadeiaAlgoritmo(melhorou);
+        // swapEmCadeiaAlgoritmo(melhorou);
     }
     atualizaSolucao(grafo, solucaoFinal);
     return solucaoFinal;

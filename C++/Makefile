@@ -6,7 +6,7 @@
 # link to the real directory and you'll be OK.
 
 APPLICATION = main
-CXXFLAGS = -Wall -I. -DVART_OGL -DIL_LIB -std=c++11
+CXXFLAGS = -O2 -Wall -I. -DVART_OGL -DIL_LIB -std=c++11
 LDFLAGS = 
 LDLIBS = 
 

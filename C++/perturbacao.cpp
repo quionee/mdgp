@@ -124,7 +124,6 @@ std::vector<Grupo> Perturbacao::perturbacaoForte(Grafo* grafo, std::vector<Grupo
         // s = buscaLocal.swapSemValorDoMovimento(grafo, sp);
         // s = buscaLocal.swapEmCadeiaSemValorDoMovimento(grafo, sp);
 
-
         int numeroAleatorio = rand() % 3;
         if (numeroAleatorio == 0) {
             s = buscaLocal.insercaoSemValorDoMovimento(grafo, sp);
